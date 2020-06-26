@@ -1,26 +1,63 @@
 # HTML
 
+[TOC]
+
 广义的HTML5是HTML5本身 + CSS3 + Javascript
 
 ## 浏览器相关
 
 主流浏览器及其内核
 
-<img src="/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200506170259372.png" alt="image-20200506170259372" style="zoom:67%;" />
+| 浏览器       | 内核    | 备注                |
+| ------------ | ------- | ------------------- |
+| IE           | Trident | IE、猎豹、360、百度 |
+| firefox      | Gecko   | 火狐浏览器内核      |
+| Safari       | Webkit  | 苹果浏览器内核      |
+| Chrome/Opera | Blink   | Blink是Webkit的分支 |
 
-浏览器标准![image-20200506171236137](/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200506171236137.png)
+
 
 ## 块级元素
 
-![image-20200509085211802](/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200509085211802.png)
+常见的块级元素有<h1>~<h6> <p> <div> <ul> <ol> <li>等
+
+块级元素的特点:
+
++ 独自占一行
++ 宽度,高度、外边距以及内边距都可以控制
++ 宽度默认是容器(父级宽度)的100%
++ 是一个容器,里面可以放行内或者块级元素
 
 ## 行内元素
 
-![image-20200509085912050](/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200509085912050.png)
+常见行内元素有<a> <strong> <b> <em> <i> <del> <s> <ins> <u> <span>等,其中<span>标签是最典型的行内元素,也可称为内联元素.
+
+行内元素特点:
+
++ 相邻元素在一行上,一行可显示多个.
+
++ 高、宽直接设置是无效的
+
++ 默认宽度就是它本身的内容的宽度
+
++ 行内元素只能容纳文本或其他行内元素
+
+  **注意:**
+
+  + 链接里面不能再放链接
+  + 特殊情况链接<a>里面可以放块级元素,但是给<a>转换一下块级模式最安全
 
 ## 行内块元素
 
-![image-20200509090504029](/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200509090504029.png)
+在行内元素中有几个特殊的标签—<img/>、<input />、<td>,它们同时具有块元素和行内元素的特点。
+有些资料称它们为行内块元素
+
+**行内块元素的特点:**
+①和相邻行内元素(行内块)在一行上,但是他们之间会有空白缝隙。一行可以显示多个(行内元素特点)
+②默认宽度就是它本身内容的宽度(行内元素特点)。
+③高度,行高、外边距以及内边距都可以控制(块级元素特点)
+
+
 
 **行内块元素之间**默认有一个**5px**的间隙，两个同时设置浮动就可以解决这个隐式的问题
 
@@ -32,10 +69,6 @@
 
 **.dropdown那里上下可以写在一起，一般用.dropdown_dt和.dropdown_dd命名**
 
-**品优购是这样写的，但是淘宝京东并没有这样写**
-
-<img src="/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200525100857466.png" alt="image-20200525100857466" style="zoom:50%;" />
-
 
 
 **文字列表后面的装饰竖线可以直接键入，也可以利用伪元素，看实际情况需要**
@@ -43,8 +76,6 @@
 
 
 **在floor区的导航里面一般使用选项卡布局，因为当点击的时候需要切换floor，后期利用JS实现**
-
-<img src="/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200525101350784.png" alt="image-20200525101350784" style="zoom:50%;" />
 
 
 
@@ -125,7 +156,12 @@ body {
 
 ### background的复合写法：
 
-![image-20200509095315409](/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200509095315409.png)
+为了简化背景属性的代码,我们可以将这些属性合并简写在同一个属性 background中。从而节约代码量」
+当使用简写属性时,没有特定的书写顺序一般习惯约定顺序为:
+
+```
+background:背景颜色背景图片地址背景平铺背景图像滚动背景图片位置
+```
 
 没有顺序，一般约定的就是这样写的
 
@@ -151,7 +187,9 @@ body {
 
 ### padding
 
-![image-20200509121339741](/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200509121339741.png)
+
+
+如何盒子本身没有指定wdth/ height属性则此时 padding不会撑开盒子大
 
 ### margin
 
@@ -159,7 +197,12 @@ body {
 
 #### 2.嵌套块元素，垂直外边距塌陷
 
-![image-20200509130911236](/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200509130911236.png)
+
+
+注意:行内元素为了照顾兼容性,尽量只设置左右内外边距,不要设置上下内外边距。但是转换为块级和行内
+块元素就可以了
+
+
 
 
 
@@ -194,9 +237,26 @@ overflow: hidden;
 
 任何元素都可以设置浮动，添加浮动的元素具有**行内块元素**的属性
 
-![image-20200510222505702](/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200510222505702.png)
 
-![image-20200510222841312](/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200510222841312.png)
+
+### 浮动特性(重难点)
+
+浮动元素会具有行内块元素特性。
+
+**任何元素都可以浮动**。不管原先是什么模式的元素,添加浮动之后具有行内块元素相似的特性。
+
++ 如果块级盒子没有设置宽度,默认宽度和父级样宽,但是添加浮动后,它的大小根据内容来决定
++ 浮动的盒子中间是没有缝隙的,是紧挨着一起的
++ 行内元素同理
+
+
+
+### 浮动元素经常和标准流父级搭配使用
+
+为了约束浮动元素位置我们网页布局一般采取的策略是:
+先用标准流的父元素排列上下位置之后内部子元素采取浮动排列左右位置.符合网页布局第一准侧
+
+
 
 #### 浮动布局注意：
 
@@ -295,8 +355,11 @@ position: fixed;
 2.固定定位不再占有原先的位置。（脱标）
 
 **固定在版心右侧位置**
+小算法:
+1.让固定定位的盒子let:50%.走到浏览器可视区(也可以看做版板心)的一半位置。
+2.让固定定位的盒子 margIn-et:版心宽度的一半距离。多走版心宽度的一半位置
 
-![image-20200516122706392](/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200516122706392.png)
+
 
 ```css
 Position: sticky;
@@ -322,7 +385,8 @@ Position: sticky;
 
 **加了绝对定位的盒子不能通过margin: 0 auto;水平居中**，但是可以通过计算偏移值实现水平和垂直居中
 
-<img src="/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200516131529191.png" alt="image-20200516131529191" style="zoom:50%;" />
+①let:50%让盒子的左侧移动到父级元素的水平中心位置。
+② margin-left:-100px:让盒子向左移动自身宽度的半
 
 
 
@@ -330,7 +394,16 @@ Position: sticky;
 
 ### 网页布局总结
 
-![image-20200516143057662](/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200516143057662.png)
+通过盒子模型,清楚知道大部分htm标签是一个盒子。
+通过CSS浮动、定位可以让每个盒子排列成为网页。
+一个完整的网页,是标隹流、浮动、定位一起完成布局的,每个都有自己的专门用法去。
+1.标准流
+可以让盒子上下排列或者左右排列,垂直的块级盒子显示就用标准流布局。
+2.浮动
+可以让多个块级元素一行显示或者左右对齐盒子,多个块级盒子水平显示就用浮动布局。
+3.定位
+定位最大的特点是有层叠的概念,就是可以让多个盒子前后叠压来显示。如果元素自由在某个盒子内移动就
+用定位布局
 
 
 
