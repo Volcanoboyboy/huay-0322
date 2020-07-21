@@ -357,7 +357,7 @@ position: fixed;
 **固定在版心右侧位置**
 小算法:
 1.让固定定位的盒子let:50%.走到浏览器可视区(也可以看做版板心)的一半位置。
-2.让固定定位的盒子 margIn-et:版心宽度的一半距离。多走版心宽度的一半位置
+2.让固定定位的盒子 margIn-left:版心宽度的一半距离。多走版心宽度的一半位置
 
 
 
@@ -1954,7 +1954,7 @@ var a = 5;
 function test() {
 		a = 0;
 		console.log(a);
-		console.log(this.a);
+		console.log(this.a);//预编译this指向window
 		var a;
 		console.log(a);
 }
@@ -2935,8 +2935,6 @@ A callback is a function that is passed as an argument to another function and i
 
 ## 常用的一些节点或者元素节点的遍历属性
 
-
-
 ```
 遍历节点树:
 	parentNode -> 父节点 (最顶端的parentNode为#document)
@@ -3417,6 +3415,34 @@ var str = "10000000000000";
     });
     console.log(newArr);
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
