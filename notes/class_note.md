@@ -1215,6 +1215,156 @@ border-image-repeat	图像边框是否应平铺(repeat)、铺满(round)或拉伸
 
 
 
+# JS高级
+
+类表达式可以为匿名或命名。
+
+```js
+// 匿名类
+let Example = class {
+    constructor(a) {
+        this.a = a;
+    }
+}
+// 命名类
+let Example = class Example {
+    constructor(a) {
+        this.a = a;
+    }
+}
+```
+
+类的声明
+
+```js
+class Example {
+    constructor(a) {
+        this.a = a;
+    }
+}
+```
+
+注意要点：不可重复声明。
+
+```js
+class Example{}
+class Example{}
+// Uncaught SyntaxError: Identifier 'Example' has already been 
+// declared
+ 
+let Example1 = class{}
+class Example{}
+// Uncaught SyntaxError: Identifier 'Example' has already been 
+// declared
+```
+
+### 注意要点
+
+**类定义不会被提升，这意味着，必须在访问前对类进行定义，否则就会报错。**
+
+**类中方法不需要 function 关键字。**
+
+**方法间不能加分号。**
+
+
+
+
+
+### extends
+
+通过 extends 实现类的继承。
+
+```
+class Child extends Father { ... }
+```
+
+### super
+
+子类 constructor 方法中必须有 super ，**且必须出现在 this 之前。**
+
+```
+class Father {
+    constructor() {}
+}
+class Child extends Father {
+    constructor() {}
+    // or 
+    // constructor(a) {
+        // this.a = a;
+        // super();
+    // }
+}
+let test = new Child(); // Uncaught ReferenceError: Must call super 
+// constructor in derived class before accessing 'this' or returning 
+// from derived constructor
+```
+
+
+
+调用父类方法, super 作为对象，在普通方法中，指向父类的原型对象，在静态方法中，指向父类
+
+### 注意要点
+
+不可继承常规对象。
+
+```js
+var Father = {
+    // ...
+}
+class Child extends Father {
+     // ...
+}
+// Uncaught TypeError: Class extends value #<Object> is not a constructor or null
+ 
+// 解决方案
+Object.setPrototypeOf(Child.prototype, Father);
+```
+
+
+
+**调用父类方法, super 作为对象，在普通方法中，指向父类的原型对象，在静态方法中，指向父类**
+
+```js
+class Child2 extends Father {
+    constructor(){
+        super();
+        // 调用父类普通方法
+        console.log(super.test()); // 0
+    }
+    static test3(){
+        // 调用父类静态方法
+        return super.test1+2;
+    }
+}
+Child2.test3(); // 3
+```
+
+
+
+#### Element.insertAdjacentHTML()
+
+**可以直接添加字符串到父元素,可以识别html结构**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

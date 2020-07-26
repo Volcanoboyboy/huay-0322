@@ -239,6 +239,12 @@ Vue.component('button-counter', {
 + Prop 是你可以在组件上注册的一些自定义 attribute。当一个值传递给一个 prop attribute 的时候，它就变成了那个组件实例的一个 property
 + 理论上一个组件可以有任意个prop,数据类型也是任意的
 
+```
+命名:
+props: ['postTitle']	如果以驼峰命名,下面就要以短横线的方式命名
+<blog-post post-title="hello!"></blog-post>
+```
+
 
 
 #### $emit内建方法实现组件间通讯
@@ -249,6 +255,11 @@ Vue.component('button-counter', {
 + **推荐始终使用 kebab-case 的事件名**
 
 因为HTML对大小写不敏感,如果用大驼峰小驼峰最后都会变成小写,导致监听不到事件
+
+```
+父组件传值给子组件: props
+子组件传值给父组件:	$emit(fun, prams)
+```
 
 
 
@@ -419,6 +430,226 @@ directives: {
 
 
 
+#### $root $parent $children
+
+子组件是可以通过`$root`访问根组件的,可以通过`$parent`访问父组件
+
+父组件可以通过`$children[0]`格式访问子组件
+
+
+
+#### $event 就是vue里面的事件对象
+
+
+
+利用内置组件`<component></component>`配合`is`属性可以实现动态组件渲染
+
+
+
+**项目里面的地址如果是项目自身的路径,是需要用require(URL)的,因为在打包后,项目里面是没有那种文件路径的**
+
+
+
+## vue实现原理 
+
+```
+https://www.bilibili.com/video/BV1m741137Q5/?p=32
+```
+
+
+
+## router
+
+**通过注入路由器，我们可以在任何组件内通过 `this.$router` 访问路由器，也可以通过 `this.$route` 访问当前路由：**
+
+**利用async await做一个异步请求,熟悉这些钩子,beforeMount(),数据请求放在这里也比较合理**
+
+#### 动态路由
+
+![image-20200722154535325](/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200722154535325.png)
+
+#### 路由嵌套
+
+路由嵌套里面的子组件路径是不需要"/"的,
+
+```
+path: "news",
+```
+
+
+
+### 编程式的导航
+
+除了使用 `` 创建 a 标签来定义导航链接，我们还可以借助 router 的实例方法，通过编写代码来实现。
+
+#### `router.push(location, onComplete?, onAbort?)`
+
+#### `router.replace(location, onComplete?, onAbort?)`
+
+#### `router.go(n)`
+
+
+
+#### 重定向和别名
+
+`redirect`	直接配置,或者命名路由,或者返回一个函数
+
+`alias`	命名别名
+
+
+
+#### 组件传参
+
+可以使用布尔模式|对象模式|函数模式(把route传进去就行)
+
+如果 `props` 被设置为 `true`，`route.params` 将会被设置为组件属性。
+
+
+
+#### *设置警告路由
+
+通配所有为定义组件,404页面
+
+
+
+### 导航守卫
+
+就是路由在跳转的过程中的处理事件,起拦截作用,方便理解也可以理解为,路由钩子
+
+例如跳转要查询是不是vip,显示对应页面
+
+全局前置钩子
+
+在所有页面跳转都会触发,这样对特定操作不友好,所以需要路由独享守卫
+
+```
+beforeEach(to, from, nextfun)
+```
+
+全局后置钩子
+
+```
+afterEach(to, from)
+```
+
+路由独享守卫
+
+只在特定路由触发,这样可以个性化操作,比如只在特定路由触发登录组件
+
+```
+beforeEnter(to, from, nextfun)
+```
+
+组件内守卫
+
+```
+beforeRouteEnter(to, from, nextFun)
+beforeRouteUpdate(to, from, nextFun)
+beforeRouteLeave(to, from, nextFun)
+```
+
+
+
+#### 完整的导航解析流程
+
+1. 导航被触发。
+2. 在失活的组件里调用 `beforeRouteLeave` 守卫。
+3. 调用全局的 `beforeEach` 守卫。
+4. 在重用的组件里调用 `beforeRouteUpdate` 守卫 (2.2+)。
+5. 在路由配置里调用 `beforeEnter`。
+6. 解析异步路由组件。
+7. 在被激活的组件里调用 `beforeRouteEnter`。
+8. 调用全局的 `beforeResolve` 守卫 (2.5+)。
+9. 导航被确认。
+10. 调用全局的 `afterEach` 钩子。
+11. 触发 DOM 更新。
+12. 用创建好的实例调用 `beforeRouteEnter` 守卫中传给 `next` 的回调函数。
+
+
+
+#### 路由元信息
+
+就是放在`meta`里面的信息
+
+
+
+#### 数据获取
+
+有时候，进入某个路由后，需要从服务器获取数据。例如，在渲染用户信息时，你需要从服务器获取用户的数据。我们可以通过两种方式来实现：
+
+- **导航完成之后获取**：先完成导航，然后在接下来的组件生命周期钩子中获取数据。在数据获取期间显示“加载中”之类的指示。
+- **导航完成之前获取**：导航完成前，在路由进入的守卫中获取数据，在数据获取成功后执行导航。
+
+从技术角度讲，两种方式都不错 —— 就看你想要的用户体验是哪种。
+
+
+
+**在为后面的视图获取数据时，用户会停留在当前的界面，因此建议在数据获取期间，显示一些进度条或者别的指示。如果数据获取失败，同样有必要展示一些全局的错误提醒。**
+
+
+
+#### 滚动行为
+
+使用前端路由，当切换到新路由时，想要页面滚到顶部，或者是保持原先的滚动位置，就像重新加载页面那样。 `vue-router` 能做到，而且更好，它让你可以自定义路由切换时页面如何滚动。
+
+`scrollBehavior` 方法接收 `to` 和 `from` 路由对象。第三个参数 `savedPosition` 当且仅当 `popstate` 导航 (通过浏览器的 前进/后退 按钮触发) 时才可用。
+
+如果有动画,**要注意在动画结束后设置才会生效**
+
+
+
+#### 路由懒加载
+
+## 把组件按组分块
+
+有时候我们想把某个路由下的所有组件都打包在同个异步块 (chunk) 中。只需要使用 [命名 chunk](https://webpack.js.org/guides/code-splitting-require/#chunkname)，一个特殊的注释语法来提供 chunk name (需要 Webpack > 2.4)。
+
+```js
+const Foo = () => import(/* webpackChunkName: "group-foo" */ './Foo.vue')
+const Bar = () => import(/* webpackChunkName: "group-foo" */ './Bar.vue')
+const Baz = () => import(/* webpackChunkName: "group-foo" */ './Baz.vue')
+```
+
+
+
+### Vuex
+
+全局注册,组件可以通过`this.$store`查看获取仓库属性
+
+```
+export default new Vuex.Store({
+  //data
+  state,
+  getters,
+  //methods,在mutation里处理状态
+  mutations,
+  //异步方法
+  actions,
+  //模块
+  modules: {
+    buyCar
+  }
+})
+```
+
+将要用到的全局state数据放在computed里面使用,使用计算属性解耦
+
+
+
+在组件里面导入mapState
+
+```
+import {mapState} from 'vuex'
+```
+
+**找箭头函数this指向的时候要记得,函数才算执行环境,单纯的大括号不是执行环境,所以对象这些是不管里面箭头函数的this的指向**
+
+
+
+
+
+
+
 #### TypeScript支持
 
 TypeScript 可能在推断某个方法的类型的时候存在困难。因此，你可能需要在 `render` 或 `computed` 里的方法上标注返回值
@@ -483,17 +714,58 @@ new Vue({
 
 
 
+# Vuex
+
+```js
+Vue.use(Vuex)
+
+//创建整个项目的数据仓库对象，将多组件公用的数据放置到此对象里
+export default new Vuex.Store({
+  //data
+  state,
+  //全局计算属性
+  getters,
+  //methods,在mutation里处理状态,这里所有的方法都是同步方法,不能做ajax异步操作
+  mutations,
+  //异步方法
+  actions,
+  //模块
+  modules: {
+    buyCar
+  }
+})
+```
+
+<img src="/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200725204638732.png" alt="image-20200725204638732" style="zoom:50%;" />
 
 
 
+通过fetch请求后返回的就是一个promise
+
+### 辅助函数
+
+**mapGetters|mapState|mapMutations|mapActions**
+
+学会使用这几个函数,数据和计算属性就比较简单的了 
 
 
 
+## Action
 
+Action 通过 `store.dispatch` 方法触发
 
+Actions 支持同样的载荷方式和对象方式进行分发：
 
+```
+// 以载荷形式分发
+store.dispatch('incrementAsync', {
+  amount: 10
+})
 
-
-
-
+// 以对象形式分发
+store.dispatch({
+  type: 'incrementAsync',
+  amount: 10
+})
+```
 

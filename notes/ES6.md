@@ -2,6 +2,10 @@
 
 [TOC]
 
+**ES6教程**
+
+https://www.runoob.com/w3cnote/es6-tutorial.html
+
 ES6 各种新语法 入门了解  石川blue讲解
 
 视频地址
