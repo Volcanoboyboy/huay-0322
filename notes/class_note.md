@@ -1217,7 +1217,7 @@ border-image-repeat	图像边框是否应平铺(repeat)、铺满(round)或拉伸
 
 # JS高级
 
-类表达式可以为匿名或命名。
+类定义可以为匿名或命名。
 
 ```js
 // 匿名类
@@ -1280,6 +1280,8 @@ class Child extends Father { ... }
 
 ### super
 
+**调用父类方法, super 作为对象，在普通方法中，指向父类的原型对象，在静态方法中，指向父类**
+
 子类 constructor 方法中必须有 super ，**且必须出现在 this 之前。**
 
 ```
@@ -1300,8 +1302,6 @@ let test = new Child(); // Uncaught ReferenceError: Must call super
 ```
 
 
-
-调用父类方法, super 作为对象，在普通方法中，指向父类的原型对象，在静态方法中，指向父类
 
 ### 注意要点
 
@@ -1347,37 +1347,80 @@ Child2.test3(); // 3
 
 
 
+### 原型和原型链
+
+
+
+**new在执行构造函数会执行一下四步:**
+
++ 在内存中创建一个新的空对象
++ 让this指向找个新对象
++ 执行构造函数里面的代码,给这个新对象添加属性和方法
++ 返回这个新对象(所以构造函数里面不需要return)
+
+
+
+**不可以通过构造函数来访问实例对象的属性和方法**
+
+
+
+### 原型
+
+构造函数通过原型分配的函数是所有对象所*共享的*
+
+**Javascript规定,每一个构造函数都有一个prototype属性,指向另一个对象.prototype就是一个对象,这个对象的所有属性和方法都会被构造函数所拥有.**
+
+一般情况下,我们的公共属性定义到构造函数里,公共方法定义到原型上
+
+
+
+### 对象原型 `__proto__`
+
+对象都会有一个属性 `_proto__`指向构造函数的prototype原型对象,之所以我们对象可以使用构造函数prototype原型对象的属性和方法,就是因为对象有 `__proto__`原型的存在
+
+
+
+一般不要直接操作`__proto__`,对 `__proto__`的操作是不可逆的,例如
+
+```js
+newArray.__proto__ = null;
+//	一旦执行这个操作
+newArray.__proto__ = oldArray.__proto__;
+//	这个操作也是无效的,newArray.__proto__依然是null
+```
+
+
+
+### constructot构造函数
+
+对象原型( `__proto__` )和构造函数原型对象(prototype)里面都有一个属性constructor属性,constructor我们称为构造函数,因为它指回构造函数本身.
+
+constructor主要用于记录该对象引用于哪个构造函数,它们可以让原型对象重新指向原来的构造函数
+
+**如果我们利用对象的形式修改了原型对象,因为直接覆盖了原型对象,就需要手动指定构造器constructor**
 
 
 
 
 
+### 原型链
+
+<img src="/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200726114633946.png" alt="image-20200726114633946" style="zoom:50%;" />
 
 
 
+#### 原型链里的this
+
+**原型对象函数里面的this指向的是实例对象**
 
 
 
+#### 对比class声明的类
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- class的本质还是function,实际就是语法糖
+- 类的所有方法都定义在类的prototype属性上
+- 类的创建的实例,里面也有`__proto__`指向类prototype原型对象
+- ES6的类的绝大部分功能,ES5都可以做到
 
 
 
@@ -1927,6 +1970,14 @@ index = (index + 1) % num;(0 ~ num - 1)
 
 
 # Git
+
+```
+git add .
+git commit -m "提交消息"
+git push
+```
+
+
 
 #### 控制系统分类
 

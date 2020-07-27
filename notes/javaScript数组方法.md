@@ -72,6 +72,7 @@ console.log(array1.copyWithin(1, 3));
 ```
 ---
 **6，Array.every()方法测试一个数组内的所有元素是否都能通过某个指定函数的测试。它返回一个布尔值。**
+
 ```
 function isBigEnough(element, index, array) {
   return element >= 10;
@@ -345,7 +346,7 @@ myFish.splice(2);//从第 2 位开始删除所有元素
 ```
 ---
 
-**27,Array.some()方法测试数组中是不是至少有1个元素通过了被提供的函数测试。它返回的是一个Boolean类型的值**
+**27,Array.some()方法测试数组中是不是至少有1个元素通过了被提供的函数测试。它返回的是一个Boolean类型的值,返回true就会终止迭代**
 ```
 const array = [1, 2, 3, 4, 5];
 

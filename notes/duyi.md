@@ -2403,15 +2403,16 @@ function Wheel(lunzi){
 
 ```js
 // 圣杯模式
-        function jiCheng(Target, Origin){
-            function F(){};
-            F.prototype = Origin.prototype;
-            Target.prototype = new F();
-
-            Target.prototype.constructor = Target;
-            // 指明超类
-            Target.prototype.uber = Origin;
-        }
+function jiCheng(Target, Origin){
+    function F(){};
+    F.prototype = Origin.prototype;
+    Target.prototype = new F();	//	目标对象的原型是指向这个实例对象,而不是原对象的原型,所以不会影响原对象的原型
+		
+  	//	我们直接修改prototype的时候,因为直接覆盖了,所以需要手动指定构造器
+    Target.prototype.constructor = Target;
+    //  指明超类
+    Target.prototype.uber = Origin;
+}
 ```
 
 

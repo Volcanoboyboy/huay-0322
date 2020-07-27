@@ -736,11 +736,21 @@ export default new Vuex.Store({
 })
 ```
 
-<img src="/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200725204638732.png" alt="image-20200725204638732" style="zoom:50%;" />
 
 
+**通过fetch请求后返回的就是一个promise**
 
-通过fetch请求后返回的就是一个promise
+```js
+fetch('http://example.com/movies.json')
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(myJson) {
+    console.log(myJson);
+  });
+```
+
+
 
 ### 辅助函数
 
@@ -768,4 +778,156 @@ store.dispatch({
   amount: 10
 })
 ```
+
+
+
+#### 混入对象mixin
+
+```js
+let option = {
+    created(){
+        console.log("组件创建");
+    },
+    beforeMount(){
+        console.log("挂载前");
+    },
+    mounted(){
+        console.log("挂载");
+    }
+}
+const vm = new Vue({
+
+    el: "#app",
+    mixins: [option],
+})
+
+//名字相同以vue实例对象为准
+```
+
+
+
+#### 自定义指令
+
+##### Vue.directive全局定义指令
+
+##### directive局部自定义指令
+
+钩子函数会获取到指令绑定的元素
+
+
+
+### 插件
+
+#### 插件的使用
+
+像vue自带的插件router,vue会在看到的时候自动调用vue.use(router)
+
+#### 自定插件及其使用
+
+```
+			let lcPlugin = {
+				install:function(Vue){
+					console.log("安装LC插件")
+					// 1. 添加全局方法或属性
+					Vue.bgColor = 'skyblue'
+					Vue.changeBg = function () {
+						document.body.style.background = Vue.bgColor
+					    // 逻辑...
+					}
+					
+					
+					  // 2. 添加全局指令
+					  Vue.directive('focus', {
+					    bind (el, binding, vnode, oldVnode) {
+					      // 逻辑...
+						  el.innerHTML = '<h1>focus</h1>'
+					    }
+					    //...
+					  })
+					  Vue.directive('lc', {
+					    bind (el, binding, vnode, oldVnode) {
+					      // 逻辑...
+					    }
+					    //...
+					  })
+					
+					  // 3. 注入组件选项
+					  Vue.mixin({
+					    created: function () {
+					      // 逻辑...
+						  console.log("这是混入得生命周期")
+					    }
+					    //...
+					  })
+					
+					  // 4. 添加实例方法
+					  Vue.prototype.$changeColor = function (methodOptions) {
+					    // 逻辑...
+						Vue.changeBg()
+					  }
+				}
+			}
+			
+			//`lcPlugin.install(Vue)`
+			Vue.use(lcPlugin)
+
+```
+
+
+
+### 过滤器
+
+
+
+```js
+<!-- 在双花括号中 -->
+//	利用过滤器capitalize过滤message
+{{ message | capitalize }}
+
+<!-- 在 `v-bind` 中 -->
+//	利用formatId过滤器过滤rawId
+<div v-bind:id="rawId | formatId"></div>
+```
+
+在创建 Vue 实例之前全局定义过滤器：
+
+```js
+Vue.filter('capitalize', function (value) {
+  if (!value) return ''
+  value = value.toString()
+  return value.charAt(0).toUpperCase() + value.slice(1)
+})
+
+new Vue({
+  // ...
+})
+```
+
+局部定义过滤器
+
+```js
+filters: {
+  capitalize: function (value) {
+    if (!value) return ''
+    value = value.toString()
+    return value.charAt(0).toUpperCase() + value.slice(1)
+  }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
