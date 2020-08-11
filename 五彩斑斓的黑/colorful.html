@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background: #666;
+        }
+
+        #app {
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: -webkit-linear-gradient(rgb(207, 86, 167), orange, cyan);
+            animation: colorRota 1s linear infinite;
+        }
+
+        @keyframes colorRota {
+            0% {
+                filter: hue-rotate(0deg);
+            }
+
+            100% {
+                filter: hue-rotate(360deg);
+            }
+        }
+
+        .mask {
+            width: 180px;
+            height: 180px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #000;
+            border-radius: 50%;
+            z-index: 9999;
+        }
+
+        span {
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: -webkit-linear-gradient(rgb(207, 86, 167), orange, cyan);
+        }
+
+        #app span:nth-child(1) {
+            filter: blur(5px);
+        }
+
+        #app span:nth-child(2) {
+            filter: blur(10px);
+        }
+
+        #app span:nth-child(3) {
+            filter: blur(30px);
+        }
+
+        #app span:nth-child(4) {
+            filter: blur(50px);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="mask"></div>
+        <span class="blurcover"></span>
+        <span class="blurcover"></span>
+        <span class="blurcover"></span>
+        <span class="blurcover"></span>
+    </div>
+</body>
+
+</html>

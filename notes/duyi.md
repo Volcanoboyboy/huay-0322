@@ -2603,7 +2603,7 @@ let constantice = function(obj){
 ##### 全局对象的属性
 
 全局对象就是指最顶层的对象，浏览器的是window，node的是global
- 在这里我们有必要了解一下，在es5中，全局对象的属性全局和全局变量是等价的
+ 在这里我们有必要了解一下，在es5中，**全局对象的属性和全局变量是等价的**
  一，暗示全局变量
  一切未经声明的变量都会归window所有，成为window的属性
  二，一切用var声明的全局变量都是window的属性
@@ -3253,8 +3253,6 @@ function cancelHandle(event) {
 
 
 
-
-
 **事件委托**
 
 利用事件冒泡,是事件源对象进行处理
@@ -3389,6 +3387,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 ```js
 var str = "10000000000000";
+
     var reg = /(?=(\B)(\d{3})+$)/g;
     str.replace(reg, ".");
     console.log(str.replace(reg, "."));

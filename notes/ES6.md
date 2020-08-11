@@ -2,652 +2,564 @@
 
 [TOC]
 
-**ES6教程**
+## 一、let和const
 
-https://www.runoob.com/w3cnote/es6-tutorial.html
+在JavaScript中咱们以前主要用关键var来定义变量，ES6之后，新增了定义变量的两个关键字，分别是let和const。
+对于变量来说，在ES5中var定义的变量会提升到作用域中所有的函数与语句前面，而ES6中let定义的变量则不会，let声明的变量会在其相应的代码块中建立一个暂时性死区，直至变量被声明。
+let和const都能够声明块级作用域，用法和var是类似的，let的特点是不会变量提升，而是被锁在当前块中。
 
-ES6 各种新语法 入门了解  石川blue讲解
+一个非常简单的例子：
 
-视频地址
-
-- [b站：深入解读ES6系列](https://www.bilibili.com/video/av20327829/)
-
-----
-
-## 1.ES6怎么来的
-
-- ECMAScript 和 JavaScript
-    - ECMA 是标准，JS 是实现
-    - ECMAScript 简称 ECMA 或 ES
-
-- 历史版本
-    - 1996, ES1.0 Netscape 将 JS 提交给 ECMA 组织，ES 正式出现
-    - 1999, ES3.0 被广泛支持
-    - 2011, ES5.1 成为 ISO 国际标准
-    - 2015, ES6.0 正式发布
-
-## 2.ES6兼容性
-
-- ES6(ES2015) 支持的环境 IE10+, Chrome, FireFox, 移动端, NodeJS
-- 解决不兼容办法，编译、转换
-    - 在线转换
-    - 或者提前编译
-
-- [Babel 中文网](https://www.babeljs.cn)
-    - [Babel 入门教程 阮一峰](http://www.ruanyifeng.com/blog/2016/01/babel.html)
-    - Babel 是一个 JavaScript 编译器
-    - 一个广泛使用的转码器，可以将ES6代码转为ES5代码，从而在现有环境执行
-    - 现在就用 ES6 编写程序，而不用担心现有环境是否支持
-
-## 3.变量 let 和 常量 const
-
-- var 的问题
-    - 可以重复声明，没有报错和警告
-    - 无法限制修改
-    - 没有块级作用域， `{ }`
-
-- let 和 const
-    - 不能重复声明
-    - 都是块级作用域, `{ }` 块内声明的，块外无效
-    - let 是变量，可以修改
-    - const 是常量，不能修改
-
-- 块级作用域举例
-    - 原来用 var 的方式，结果弹出的都是 3
-    - 或者将变量 封装到函数里，限制作用域，但比较麻烦
-    - 用 let 最简单，直接 var 改 let，解决作用域问题
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <script>
-        window.onload= function () {
-            /*
-            var aBtn = document.getElementsByTagName('input')
-            for (var i=0; i < aBtn.length; i++) {
-                aBtn[i].onclick = function () {
-                    alert(i)
-                }
-            }*/
-            var aBtn = document.getElementsByTagName('input')
-            for (let i = 0; i < aBtn.length; i++) {
-                aBtn[i].onclick = function () {
-                    alert(i)
-                }
-            }
-            /*
-            var aBtn = document.getElementsByTagName('input')
-            for (var i = 0; i < aBtn.length; i++) {
-                // 封装到函数里，限制作用域
-                (function (i) {
-                    aBtn[i].onclick = function () {
-                        alert(i)
-                    }
-                })(i)
-            }*/
-        }
-    </script>
-</head>
-<body>
-    <input type="button" value="按钮1">
-    <input type="button" value="按钮2">
-    <input type="button" value="按钮3">
-</body>
-</html>
 ```
-
-## 4.函数-箭头函数
-
-- 箭头函数，就是函数的简写
-    - 如果只有一个参数，`()` 可以省
-    - 如果只有一个`return`，`{}`可以省
-
-```js
-// 普通函数
-function name() {
-
+function test() {
+if(true) {
+  console.log(a)//TDZ，俗称临时死区，用来描述变量不提升的现象
+  let a = 1
 }
-// 箭头函数，去掉 function， 加上 =>
-() => {
-
 }
-```
+test()  // a is not defined
 
-```js
-let show1 = function () {
-    console.log('abc')
-}
-
-let show2 = () => {
-    console.log('abc')
-}
-
-show1() // 调用函数
-show2()
-
-let show4 = function (a) {
-    return a*2
-}
-
-let show5 = a => a * 2  //简洁，类似python lambda 函数
-
-console.log(show4(10))
-console.log(show5(10))
-```
-
-## 5.函数-参数
-
-- 参数扩展／展开 `...args`
-    - 收集剩余的参数，必须当到最后一个参数位置
-    - 展开数组，简写，效果和直接把数组的内容写在这儿一样
-- 默认参数
-
-```js
-function show(a, b, ...args) {
+function test() {
+    if(true) {
+      let a = 1
+    }
     console.log(a)
-    console.log(b)
-    console.log(args)
-}
-console.log(show(1, 2, 3, 4, 5))
-
-let arr1 = [1, 2, 3]
-let arr2 = [4, 5, 6]
-let arr3 = [...arr1, ...arr2]
-console.log(arr3)
-
-function show2(a, b=5, c=8) {
-    console.log(a, b, c)
-}
-show2(88, 12)
+}    
+test() // a is not defined
 ```
 
-## 6.解构赋值
-
-```js
-let [a, b, c] = [1, 2, 3]
-console.log(a, b, c)
-
-let {x, y, z} = {x: 1, y: 2, z: 3}
-console.log(x, y, z)
-
-let [json, arr, num, str] = [{ a: 1, b: 2 }, [1, 2, 3], 8, 'str']
-console.log(json, arr, num, str)
-```
-
-- 解构赋值
-    - 左右两个边结构必须一样
-    - 右边必须是个东西
-    - 声明和赋值赋值不能分开，必须在一句话里
-
-## 7.ES5新增的数组方法
-
-- 新增的几个方法,除此还有some | every
-- 如果数据唯一,some效率比filter效率要高一些,但是返回的布尔值,需要提前执行事件就行了
-- map 映射  一个对一个
-
-```js
-let arr = [12, 5, 8]
-let result = arr.map(function (item) {
-    return item*2
-})
-let result2 = arr.map(item=>item*2) // 简写
-console.log(result)
-console.log(result2)
-
-let score = [18, 86, 88, 24]
-let result3 = score.map(item => item >= 60 ? '及格' : '不及格')
-console.log(result3)
-
-// 结果
-[ 24, 10, 16 ]
-[ 24, 10, 16 ]
-[ '不及格', '及格', '及格', '不及格' ]
-```
-
-- reduce 汇总  一堆出来一个
-    - 用于比如，算个总数，算个平均
-
-```js
-var arr = [1, 3, 5, 7]
-var result = arr.reduce(function (tmp, item, index) {
-    //tmp 上次结果，item当前数，index次数1开始
-    console.log(tmp, item, index)
-    return tmp + item
-})
-console.log(result)
-
-var arr = [1, 3, 5, 7]
-var result = arr.reduce(function (tmp, item, index) {
-    if (index != arr.length - 1) { // 不是最后一次
-        return tmp + item
-    } else {
-        return (tmp + item)/arr.length
-    }
-})
-console.log(result)  // 平均值
-```
-
-- filter 过滤器 保留为true的
-
-```js
-var arr = [12, 4, 8, 9]
-var result = arr.filter(item => (item % 3 === 0) ? true : false)
-console.log(result)
-var result = arr.filter(item => item % 3 === 0)
-console.log(result)
-
-var arr = [
-    { title: '苹果', price: 10 },
-    { title: '西瓜', price: 20 },
-]
-var result = arr.filter(json => json.price >= 20)
-console.log(result)
-```
-
-- forEach 循环迭代
-
-```js
-var arr = [12, 4, 8, 9]
-var result = arr.forEach(item => console.log(item))
-var result = arr.forEach((item, index)=>console.log(item, index))
-```
-
-## 8.字符串
-
-- 多了两个新方法
-    - `startsWith`
-    - `endsWith`
-
-```js
-var url = 'http://qq.com'
-console.log(url.startsWith('http'))
-console.log(url.endsWith('com'))
-// 都是 true
-```
-
-- 字符串模版
-    - 使用反引号，`${变量}`
-    - 可以折行
-
-```js
-let a = 12
-let str1 = `asdf${a}`
-console.log(str1)
-
-let title = '标题'
-let content = '内容'
-let str = `<div>
-<h1>${title}</h1>
-<p>${content}</p>
-`
-console.log(str)
-<div>
-<h1>标题</h1>
-<p>内容</p>
-```
-
-## 9.面向对象-基础
-
-- 原来写法
-    - 类和构造函数一样
-    - 属性和方法分开写的
-
-```js
-// 老版本
-function User(name, pass) {
-    this.name = name
-    this.pass = pass
-}
-
-User.prototype.showName = function () {
-    console.log(this.name)
-}
-User.prototype.showPass = function () {
-    console.log(this.pass)
-}
-
-var u1 = new User('able', '1233')
-u1.showName()
-u1.showPass()
-// 老版本继承
-function VipUser(name, pass, level) {
-    User.call(this, name, pass)
-    this.level = level
-}
-VipUser.prototype = new User()
-VipUser.prototype.constructor = VipUser
-VipUser.prototype.showLevel = function () {
-    console.log(this.level)
-}
-
-var v1 = new VipUser('blue', '1234', 3)
-v1.showName()
-v1.showLevel()
+**唯一正确的使用方法：先声明，再访问。**
 
 ```
-
-- 新版面向对象
-    - 有了 class 关键字、构造器
-    - class 里面直接加方法
-    - 继承，super 超类==父类
-
-```js
-class User {
-    constructor(name, pass) {
-        this.name = name
-        this.pass = pass
-    }
-
-    showName() {
-        console.log(this.name)
-    }
-    showPass() {
-        console.log(this.pass)
+function test() {
+    if(true) {
+      let a = 1
+      console.log(a)
     }
 }
+test() // 1
+```
 
-var u1 = new User('able2', '111')
-u1.showName()
-u1.showPass()
+const
+声明常量，一旦声明，不可更改，而且常量必须初始化赋值。
+const虽然是常量，不允许修改默认赋值(其实就是不允许修改变量的引用)，但如果定义的是对象Object，那么可以修改对象内部的属性值。
 
-// 新版本继承
-class VipUser extends User {
-    constructor(name, pass, level) {
-        super(name, pass)//相当于call 或者 apply
-        this.level = level//添加自己的属性就可以了
-    }
-    showLevel(){//添加自己需要的方法就可以了
-        console.log(this.level)
-    }
+```
+const type = {
+  a: 1
 }
-
-v1 = new VipUser('blue', '123', 3)
-v1.showLevel()
+type.a = 2 //没有直接修改type的值，而是修改type.a的属性值，这是允许的。
+console.log(type) // {a: 2}
 ```
 
-## 10.面向对象应用
+**const和let的异同点**
+**相同点：**const和let都是在当前块内有效，执行到块外会被销毁，也不存在变量提升（TDZ），不能重复声明。
+**不同点：**const不能再赋值，let声明的变量可以重复赋值。
+**const**实际上保证的，**并不是变量的值不得改动，而是变量指向的那个内存地址所保存的数据不得改动**。对于简单类型的数据（数值、字符串、布尔值），值就保存在变量指向的那个内存地址，因此等同于常量。但对于复合类型的数据（主要是对象和数组），变量指向的内存地址，保存的只是一个指向实际数据的指针，const只能保证这个指针是固定的（即总是指向另一个固定的地址），至于它指向的数据结构是不是可变的，就完全不能控制了。因此，将一个对象声明为常量必须非常小心。
 
-- [React](https://www.reactjscn.com)
-    - 用于构建用户界面的 JavaScript 库
-    - 组件化，一个组件就是一个 class
-    - JSX == bable == browser.js
+**块级作用域的使用场景**
+除了上面提到的常用声明方式，我们还可以在循环中使用，最出名的一道面试题：循环中定时器闭包的考题
+在for循环中使用var声明的循环变量，会跳出循环体污染当前的函数。
 
-## 11.json
-
-- JSON 格式
-    - JavaScript Object Notation 的缩写，是一种用于数据交换的文本格式
-    - JSON 是 JS对象 的严格子集
-    - JSON 的标准写法
-    - 只能用双引号
-    - 所有的key都必须用双引号包起来
-
-- JSON 对象
-    - JSON 对象是 JavaScript 的原生对象，用来处理 JSON 格式数据，有两个静态方法
-    - JSON.parse(string) ：接受一个 **JSON 字符串**并将其转换成一个 JavaScript **对象**。
-    - JSON.stringify(obj) ：接受一个 JavaScript **对象**并将其转换为一个 **JSON 字符串**。
-
-```js
-var json = {a: 12, b: 5}
-var str = 'hi,' + JSON.stringify(json)
-var url = 'http://www.xx.com/' + encodeURIComponent(JSON.stringify(json))
-console.log(str)
-console.log(url)
-
-var str = '{"a": 12, "b": 4, "c": "abc"}'
-var json = JSON.parse(str)
-console.log(json)
-hi,{"a":12,"b":5}
-http://www.xx.com/%7B%22a%22%3A12%2C%22b%22%3A5%7D
-{ a: 12, b: 4, c: 'abc' }
 ```
-
-- 对象（object）
-    - 是 JavaScript 语言的核心概念，也是最重要的数据类型
-    - 对象就是一组“键值对”（key-value）的集合，是一种无序的复合数据集合
-    - 对象的所有键名都是字符串, 所以加不加引号都可以
-    - 如果键名是数值，会被自动转为字符串
-    - 对象的每一个键名又称为“属性”（property），它的“键值”可以是任何数据类型
-    - 如果一个属性的值为函数，通常把这个属性称为“方法”，它可以像函数那样调用
-    - in 运算符用于检查对象是否包含某个属性（注意，检查的是键名，不是键值
-    - for...in循环用来遍历一个对象的全部属性
-
-- 对象 简写
-    - key-value 一样时可以简写
-    - 里面函数可以简写, 去掉
-
-```js
-var a = 12, b = 5
-console.log({a:a, b:b})
-console.log({a, b})
-console.log({a, b, c:"c"})
-console.log({ a, b, show(){ console.log('a') }})
-{ a: 12, b: 5 }
-{ a: 12, b: 5 }
-{ a: 12, b: 5, c: 'c' }
-{ a: 12, b: 5, show: [Function: show] }
-```
-
-## 12.Promise
-
-- 异步和同步
-    - 异步，操作之间没有关系，同时执行多个操作， 代码复杂
-    - 同步，同时只能做一件事，代码简单
-
-- Promise 对象
-    - 用同步的方式来书写异步代码
-    - Promise 让异步操作写起来，像在写同步操作的流程，不必一层层地嵌套回调函数
-    - 改善了可读性，对于多层嵌套的回调函数很方便
-    - 充当异步操作与回调函数之间的中介，使得异步操作具备同步操作的接口
-
-- Promise 也是一个构造函数
-    - 接受一个回调函数f1作为参数，f1里面是异步操作的代码
-    - 返回的p1就是一个 Promise 实例
-    - 所有异步任务都返回一个 Promise 实例
-    - Promise 实例有一个then方法，用来指定下一步的回调函数
-
-```js
-function f1(resolve, reject) {
-  // 异步代码...
+for(var i = 0; i < 5; i++) {
+  setTimeout(() => {
+    console.log(i) //5, 5, 5, 5, 5
+  }, 0)
 }
-var p1 = new Promise(f1);
-p1.then(f2); // f1的异步操作执行完成，就会执行f2。
-```
+console.log(i) //5 i跳出循环体污染外部函数
 
-- Promise 使得异步流程可以写成同步流程
-
-```js
-// 传统写法
-step1(function (value1) {
-  step2(value1, function(value2) {
-    step3(value2, function(value3) {
-      step4(value3, function(value4) {
-        // ...
-      });
-    });
-  });
-});
-
-// Promise 的写法
-(new Promise(step1))
-  .then(step2)
-  .then(step3)
-  .then(step4);
-```
-
-- Promise.all(promiseArray)方法
-    - 将多个Promise对象实例包装，生成并返回一个新的Promise实例
-    - promise数组中所有的promise实例都变为resolve的时候，该方法才会返回
-    - 并将所有结果传递results数组中
-    - promise数组中任何一个promise为reject的话，则整个Promise.all调用会立即终止，并返回一个reject的新的promise对象
-
-```js
-var p1 = Promise.resolve(1),
-    p2 = Promise.resolve(2),
-    p3 = Promise.resolve(3);
-Promise.all([p1, p2, p3]).then(function (results) {
-    console.log(results);  // [1, 2, 3]
-});
-```
-
-- Promise.race([p1, p2, p3])
-    - Promse.race就是赛跑的意思
-    - 哪个结果获得的快，就返回那个结果
-    - 不管结果本身是成功状态还是失败状态
-
-## 13.generator-认识生成器函数
-
-- generator 生成器函数
-    - 普通函数，一路到底
-    - generator函数，中间可以停，到哪停呢，用 yield 配合，交出执行权
-    - yield 有 放弃、退让、退位的意思
-    - 需要调用next()方法启动执行，需要遇到 yield 停, 踹一脚走一步
-    - generator函数前面加一个 `*` 两边可以有空格，或靠近函数或`function`
-    - 背后实际生成多个小函数，实现走走停停
-
-```js
-function show() {
-    console.log('a')
-    console.log('b')
+//将var改成let之后
+for(let i = 0; i < 5; i++) {
+  setTimeout(() => {
+    console.log(i) // 0,1,2,3,4
+  }, 0)
 }
-show() // 普通函数
-
-function *show2() {
-    console.log('1')
-    yield
-    console.log('2')
-}
-let genObj = show2()
-genObj.next() // 1
-genObj.next() // 2
-genObj.next() // 最后了，没有结果
+console.log(i)//i is not defined i无法污染外部函数
 ```
 
-## 14.generator-yield是啥
+在实际开发中，我们选择使用var、let还是const，取决于我们的变量是不是需要更新，通常我们希望变量保证不被恶意修改，而使用大量的const。使用const声明，声明一个对象的时候，也推荐使用const，当你需要修改声明的变量值时，使用let，var能用的场景都可以使用let替代。
 
-- `yield`
-    - 既可传参，又可以返回
-    - 第一个`next()`传参无效，只用来启动
+**symbol**
+ES6 以前，我们知道5种基本数据类型分别是Undefined，Null，Boolean，Number以及String，然后加上一种引用类型Object构成了JavaScript中所有的数据类型，但是ES6出来之后，新增了一种数据类型，名叫symbol，像它的名字表露的一样，意味着独一无二，意思是每个 Symbol类型都是独一无二的，不与其它 Symbol 重复。
+可以通过调用 Symbol() 方法将创建一个新的 Symbol 类型的值，这个值独一无二，不与任何值相等。
 
-- 如果函数前漏掉 `*`
-    - 就是普通函数
-    - 如果有`yield`会报错， `ReferenceError: yield is not defined`
-    - yield 只能在Generator函数内部使用
-
-```js
-function * show() {
-    console.log('1')
-    var a = yield
-    console.log('2')
-    console.log(a)
-}
-// yield 传参
-var gen = show()
-gen.next() // 1
-gen.next() // 2 和 undefined 因为没有传参，yield没有返回值
-var gen = show()
-gen.next(10) // 1 第一次执行到yield，但没有执行赋值
-gen.next(20) // 2 和 20
-
-function* show2() {
-    console.log('1')
-    yield 10
-    console.log('2')
-}
-// yield 返回
-var gen = show2()
-var res1 = gen.next()
-console.log(res1) // { value: 10, done: false }
-var res2 = gen.next()
-console.log(res2)
-// { value: undefined, done: true } 最后的value需要return返回
+```
+var mySymbol=Symbol();
+console.log(typeof mySymbol) //"symbol"
 ```
 
-## 15.generator-实例
+## 二、字符串
 
-- Promise 适合一次读一组
-- generator 适合逻辑性的
+ES6字符串新增的方法
 
-```js
-// 带逻辑-generator
-runner(function * () {
-    let userData = yield $.ajax({url: 'getUserData'})
+**UTF-16码位：**ES6强制使用UTF-16字符串编码。关于UTF-16的解释请自行百度了解。
 
-    if (userData.type == 'VIP') {
-        let items = yield $.ajax({url: 'getVIPItems'})
-    } else {
-        let items = yield $.ajax({url: 'getItems'})
-    }
+**codePointAt()：**该方法支持UTF-16，接受编码单元的位置而非字符串位置作为参数，返回与字符串中给定位置对应的码位，即一个整数值。
+
+`String.fromCodePoiont()：`作用与codePointAt相反，检索字符串中某个字符的码位，也可以根据指定的码位生成一个字符。
+
+**normalize()：**提供Unicode的标准形式，接受一个可选的字符串参数，指明应用某种Unicode标准形式。
+
+在ES6中，新增了3个新方法。每个方法都接收2个参数，需要检测的子字符串，以及开始匹配的索引位置。
+
+**模板字符串**
+字符串是JavaScript中基本类型之一，应该算是除了对象之外是使用最为频繁的类型吧，字符串中包含了例如substr，replace，indexOf,slice等等诸多方法，ES6引入了模板字符串的特性，用反引号来表示，可以表示多行字符串以及做到文本插值（利用模板占位符）。
+
+```
+// 以前的多行字符串我们这么写：
+console.log("hello world 1\n\
+hello cala");
+// "hello world
+// hello cala"
+
+//有了模板字符串之后
+console.log(`hello world
+string text line 2`);
+// "hello world
+// hello cala"
+```
+
+可以用${}来表示模板占位符，可以将你已经定义好的变量传进括弧中，例如：
+
+```
+var name="cala";
+var age=22;
+console.log(`hello,I'am ${name},my age is ${age}`)
+//hello,I'am cala,my age is 22
+```
+
+**includes(str, index)：**如果在字符串中检测到指定文本，返回true，否则false。
+
+```
+let t = 'abcdefg'
+if(t.includes('cde')) {
+  console.log(2)
+}
+//true
+```
+
+**startsWith(str, index)：**如果在字符串起始部分检测到指定文本，返回true，否则返回false。
+
+```
+let t = 'abcdefg'
+if(t.startsWith('ab')) {
+  console.log(2)
+}
+//true
+```
+
+**endsWith(str, index)：**如果在字符串的结束部分检测到指定文本，返回true，否则返回false。
+
+```
+let t = 'abcdefg'
+if(t.endsWith('fg')) {
+  console.log(2)
+}
+//true
+```
+
+如果你只是需要匹配字符串中是否包含某子字符串，那么推荐使用新增的方法，如果需要找到匹配字符串的位置，使用indexOf()。
+
+## 三、函数
+
+*函数的默认参数*
+在ES5中，我们给函数传参数，然后在函数体内设置默认值，如下面这种方式。
+
+```
+function a(num, callback) {
+  num = num || 6
+  callback = callback || function (data) {console.log('ES5: ', data)}
+  callback(num * num)
+}
+a() //ES5: 36，不传参输出默认值
+
+//你还可以这样使用callback
+a(10, function(data) {
+  console.log(data * 10) // 1000， 传参输出新数值
 })
 ```
 
-```js
-// yield 实例，用同步方式写异步
-server.use(function * () {
-    let data = yield db.query(`select * from user_table`)
-    this.body = data
+在ES6中，我们使用新的默认值写法
+
+```
+function a(num = 6, callback = function (data) {console.log('ES6: ', data)}) {
+  callback(num * num)
+}
+
+a() //ES6: 36， 不传参输出默认值
+
+a(10, function(data) {
+  console.log(data * 10) // 1000，传参输出新数值
 })
 ```
 
-## 16.ES7 预览
+## 四、箭头函数（=>）
 
-- 数组
-    - `arr.includes()` 数组是否包含某个东西
-    - 数组的 arr.keys(), arr,entries()
-    - for ... in 遍历数组 下标 key
-    - for ... of 遍历数组 值 value, 不能用于json
+（箭头函数比较重要，现在简单提一下，迟一点有空专门写一篇箭头函数的文章。）
 
-```js
-let arr = ['a', 'b', 'c']
-console.log(arr.includes(1))
-
-for (let i in arr) {
-    console.log(i) // 循环的时下标 key
-}
-
-for (let i of arr) {
-    console.log(i) // 循环的是值 value
-}
-for (let i of arr.keys()) {
-    console.log('>'+i)
-}
-for (let [key, value] of arr.entries()) {
-    console.log('>' + key + value)
-}
-
-let json = { a: 12, b: 5, c: 7 }
-for (let i in json) {
-    console.log(i)
-}
+```
+const arr = [5, 10]
+const s = arr.reduce((sum, item) => sum + item)
+console.log(s) // 15
 ```
 
-- 字符串
-    - padStart()/padEnd() 指定宽度，不够就补空格或指定字符
+箭头函数中this的使用跟普通函数也不一样，在JavaScript的普通函数中，都会有一个自己的this值，主要分为：
+**普通函数：**
+1、函数作为全局函数被调用时，this指向全局对象
+2、函数作为对象中的方法被调用时，this指向该对象
+3、函数作为构造函数的时候，this指向构造函数new出来的新对象
+4、还可以通过call，apply，bind改变this的指向
+**箭头函数：**
+1、箭头函数没有this，函数内部的this来自于父级最近的非箭头函数，并且不能改变this的指向。
+2、箭头函数没有super
+3、箭头函数没有arguments
+4、箭头函数没有new.target绑定。
+5、不能使用new
+6、没有原型
+7、不支持重复的命名参数。
 
-```js
-console.log('=' + 'abcd'.padStart(6, '0') + '=')
-console.log('=' + 'abcd'.padEnd(6, '0') + '=')
-=00abcd=
-=abcd00=
+**箭头函数的简单理解**
+
+1、箭头函数的左边表示输入的参数，右边表示输出的结果。
+
+```
+const s = a => a
+console.log(s(2)) // 2
 ```
 
-- 容忍度
-    - [1, 2, 3,] 老版数组最后不能有逗号，新的可以有
-    - 函数参数最后多的逗号也可以
+2、在箭头函数中，this属于词法作用域，直接由上下文确定，对于普通函数中指向不定的this，箭头函数中处理this无疑更加简单，如下：
 
-- async await
-    - 和 generator yield 类似
-    - generator 不可以写成箭头函数， async 可以
-
-```js
-async function show() {
-    console.log(1)
-    await
-    console.log(2)
+```
+//ES5普通函数
+function Man(){
+  this.age=22;
+  return function(){
+    this.age+1;
+  }
 }
+var cala=new Man();
+console.log(cala())//undefined
+
+//ES6箭头函数
+function Man(){
+  this.age=22;
+  return () => this.age+1;
+}
+var cala=new Man();
+console.log(cala())//23
 ```
 
+3、箭头函数中没有arguments(我们可以用rest参数替代),也没有原型，也不能使用new 关键字，例如：
+
+```
+//没有arguments
+var foo=(a,b)=>{return arguments[0]*arguments[1]}
+console.log(foo(3,5))
+//arguments is not defined
+
+//没有原型
+var Obj = () => {};
+console.log(Obj.prototype); 
+// undefined
+
+//不能使用new 关键字
+var Obj = () => {"hello world"};
+var o = new Obj(); 
+// TypeError: Obj is not a constructor
+```
+
+4、箭头函数给数组排序
+
+```
+const arr = [10, 50, 30, 40, 20]
+const s = arr.sort((a, b) => a - b)
+console.log(s) // [10,20,30,40,50]
+```
+
+**尾调用优化**
+尾调用是指在函数return的时候调用一个新的函数，由于尾调用的实现需要存储到内存中，在一个循环体中，如果存在函数的尾调用，你的内存可能爆满或溢出。
+
+ES6中，引擎会帮你做好尾调用的优化工作，你不需要自己优化，但需要满足下面3个要求：
+1、函数不是闭包
+2、尾调用是函数最后一条语句
+3、尾调用结果作为函数返回
+
+**尾调用实际用途——递归函数优化**
+在ES5时代，我们不推荐使用递归，因为递归会影响性能。
+但是有了尾调用优化之后，递归函数的性能有了提升。
+
+```
+//新型尾优化写法
+"use strict";  
+function a(n, p = 1) {
+  if(n <= 1) {
+    return 1 * p
+  }
+  let s = n * p
+  return a(n - 1, s)
+}
+//求 1 x 2 x 3的阶乘
+let sum = a(3)
+console.log(sum) // 6
+```
+
+## 五、ES6对象新增方法
+
+**Object.assign()**
+Object.assign()方法用于将所有可枚举属性的值从一个或多个源对象复制到目标对象。它将返回目标对象。
+Object.assign 方法只会拷贝源对象自身的并且可枚举的属性到目标对象。该方法使用源对象的[[Get]]和目标对象的[[Set]]，所以它会调用相关 getter 和 setter。因此，它分配属性，而不仅仅是复制或定义新的属性。如果合并源包含getter，这可能使其不适合将新属性合并到原型中。为了将属性定义（包括其可枚举性）复制到原型，应使用Object.getOwnPropertyDescriptor()和Object.defineProperty() 。
+String类型和 Symbol 类型的属性都会被拷贝。
+合并对象
+
+```
+var o1 = { a: 1 };
+var o2 = { b: 2 };
+var o3 = { c: 3 };
+var obj = Object.assign(o1, o2, o3);
+console.log(obj); // { a: 1, b: 2, c: 3 }
+console.log(o1);  // { a: 1, b: 2, c: 3 }, 注意目标对象自身也会改变。
+```
+
+合并具有相同属性的对象
+
+```
+var o1 = { a: 1, b: 1, c: 1 };
+var o2 = { b: 2, c: 2 };
+var o3 = { c: 3 };
+var obj = Object.assign({}, o1, o2, o3);
+console.log(obj); // { a: 1, b: 2, c: 3 }
+```
+
+## 六、Map和Set
+
+Map和Set都叫做集合，但是他们也有所不同。Set常被用来检查对象中是否存在某个键名，Map集合常被用来获取已存的信息。
+Set是有序列表，含有相互独立的非重复值。
+**Array和Set对比**
+*都是一个存储多值的容器，两者可以互相转换，但是在使用场景上有区别。如下:*
+Array的indexOf方法比Set的has方法效率低下
+Set不含有重复值（可以利用这个特性实现对一个数组的去重）
+Set通过delete方法删除某个值，而Array只能通过splice。两者的使用方便程度前者更优
+Array的很多新方法map、filter、some、every等是Set没有的（但是通过两者可以互相转换来使用）
+**Object和Map对比**
+*Object是字符串-值，Map是值-值*
+Object键为string类型,Map的键是任意类型
+手动计算Object尺寸,Map.size可以获取尺寸
+Map的排序是插入顺序
+Object有原型，所以映射中有一些缺省的键。可以理解为Map=Object.create(null)
+
+**Set操作集合**
+
+```
+let set = new Set()
+// Set转化为数组
+let arr = Array.from(set)
+let arr = [...set]
+// 实例属性（继承自Set）
+set.constructor === Set 
+set.size 
+// 操作方法
+set.add(1) // 添加一个值
+set.delete(1) //删除一个值
+set.has(1) //判断是否有这个值（Array中的indexOf）
+set.clear() //清除所有值
+// 获取用于遍历的成员方法(Set的遍历顺序就是插入顺序)
+set.keys() // 返回键名的遍历器
+set.values() // 返回键值得遍历器
+set.entries() // 返回键值对的遍历器
+set.forEach() // 循环遍历每个值(和Array的方法一致)
+for (let key of set.keys()){}
+for (let val of set.values()){}
+for (let entry of set.entries()){}
+// 使用数组方法来处理set值
+set = new Set(arr)
+set = new Set([...set].map((x) => x = x * 2))
+set = new Set([...set].filter((x) => x > 2))
+```
+
+**Map的方法集合**
+
+```
+let map = new Map()
+// 实例属性(继承自Map)
+map.constructor === Map
+map.size
+// 操作方法
+map.set(1,2)
+map.get(1)
+map.delete(1)
+map.has(1)
+map.clear()
+// 遍历方法
+map.keys()
+map.values()
+map.entries()
+map.forEach()
+// Map和数组的转换
+map = new Map([['key','val'],[2,1]]) // 要求双成员数组
+let arr = [...map]
+// 值得注意的是Map的键是跟内存绑定的
+map.set([1], 's')
+map.get([1])
+let arr = [1]
+let arr1 = [1]
+map.set(arr, 's')
+map.get(arr)
+map.set(arr1, 's')
+map.get(arr1)
+```
+
+想要深入理解Set和Map，可以查看《深入理解：ES6中的Set和Map数据结构，Map与其它数据结构的互相转换》
+
+## 七、迭代器（Iterator）
+
+**1、entries() 返回迭代器：返回键值对**
+
+```
+//数组
+const arr = ['a', 'b', 'c'];
+for(let v of arr.entries()) {
+  console.log(v)
+}
+// [0, 'a'] [1, 'b'] [2, 'c']
+
+//Set
+const arr = new Set(['a', 'b', 'c']);
+for(let v of arr.entries()) {
+  console.log(v)
+}
+// ['a', 'a'] ['b', 'b'] ['c', 'c']
+
+//Map
+const arr = new Map();
+arr.set('a', 'a');
+arr.set('b', 'b');
+for(let v of arr.entries()) {
+  console.log(v)
+}
+// ['a', 'a'] ['b', 'b']
+```
+
+**2、values() 返回迭代器：返回键值对的value**
+
+```
+//数组
+const arr = ['a', 'b', 'c'];
+for(let v of arr.values()) {
+  console.log(v)
+}
+//'a' 'b' 'c'
+
+//Set
+const arr = new Set(['a', 'b', 'c']);
+for(let v of arr.values()) {
+  console.log(v)
+}
+// 'a' 'b' 'c'
+
+//Map
+const arr = new Map();
+arr.set('a', 'a');
+arr.set('b', 'b');
+for(let v of arr.values()) {
+  console.log(v)
+}
+// 'a' 'b'
+```
+
+**3、keys() 返回迭代器：返回键值对的key**
+
+```
+//数组
+const arr = ['a', 'b', 'c'];
+for(let v of arr.keys()) {
+  console.log(v)
+}
+// 0 1 2
+
+//Set
+const arr = new Set(['a', 'b', 'c']);
+for(let v of arr.keys()) {
+  console.log(v)
+}
+// 'a' 'b' 'c'
+
+//Map
+const arr = new Map();
+arr.set('a', 'a');
+arr.set('b', 'b');
+for(let v of arr.keys()) {
+  console.log(v)
+}
+// 'a' 'b'
+```
+
+虽然上面列举了3种内建的迭代器方法，但是不同集合的类型还有自己默认的迭代器，在for of中，数组和Set的默认迭代器是values()，Map的默认迭代器是entries()。
+
+**for of循环解构**
+
+对象本身不支持迭代，但是我们可以自己添加一个生成器，返回一个key，value的迭代器，然后使用for of循环解构key和value。
+
+```
+const obj = {
+  a: 1,
+  b: 2,
+  *[Symbol.iterator]() {
+    for(let i in obj) {
+      yield [i, obj[i]]
+    }
+  }
+}
+for(let [key, value] of obj) {
+  console.log(key, value)
+}
+// 'a' 1, 'b' 2
+```
+
+字符串迭代器
+
+```
+const str = 'abc';
+for(let v of str) {
+  console.log(v)
+}
+// 'a' 'b' 'c'
+```
+
+## ES6给数组添加了几个新方法：find()、findIndex()、fill()、copyWithin()
+
+1、find()：传入一个回调函数，找到数组中符合当前搜索规则的**第一个元素**，返回它，并且终止搜索。
+
+```
+const arr = [1, "2", 3, 3, "2"]
+console.log(arr.find(n => typeof n === "number")) // 1
+//	如果查找不到就是返回undefined
+```
+
+2、findIndex()：传入一个回调函数，找到数组中符合当前搜索规则的**第一个元素**，返回它的下标，终止搜索。
+
+```
+const arr = [1, "2", 3, 3, "2"]
+console.log(arr.findIndex(n => typeof n === "number")) // 0
+```
+
+3、fill()：用新元素替换掉数组内的元素，可以指定替换下标范围。
+
+```
+arr.fill(value, start, end)
+```
+
+4、copyWithin()：选择数组的某个下标，从该位置开始复制数组元素，默认从0开始复制。也可以指定要复制的元素范围。
+
+```
+arr.copyWithin(target, start, end)
+
+const arr = [1, 2, 3, 4, 5]
+console.log(arr.copyWithin(3)) // [1,2,3,1,2] 从下标为3的元素开始，复制数组，所以4, 5被替换成1, 2
+
+const arr1 = [1, 2, 3, 4, 5]
+console.log(arr1.copyWithin(3, 1)) // [1,2,3,2,3] 从下标为3的元素开始，复制数组，指定复制的第一个元素下标为1，所以4, 5被替换成2, 3
+
+const arr2 = [1, 2, 3, 4, 5]
+console.log(arr2.copyWithin(3, 1, 2)) // [1,2,3,2,5] 从下标为3的元素开始，复制数组，指定复制
+```

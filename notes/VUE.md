@@ -1,10 +1,88 @@
+# 项目步骤
+
+划分项目目录结构(大致的分类),先将不需要的清除一下
+
+```bash
+--vue.config.js	// vue的配置
+--.editorconfig	// 项目风格配置
+
+src
+├── assets
+│		├── img
+│   └── css
+├── common	//	公共的js文件
+│		├──	const.js //	抽取公共常量
+│		└──	utils.js	//	公共的方法,混入等
+├── components
+│		├── common	// 完全公共的组件,不受项目约束的
+│		└── content	// 项目相关的公共组件
+├── router
+├── store
+├── network
+├── views
+│		├── category //	列表页面等
+│		├── home // 主页面
+│		└── ...
+├── app.vue
+└── main.js
+```
+
+vuex结构抽取,state一般不需要抽取,就放在index.js
+
+```bash
+store
+  ├── index.js          # 我们组装模块并导出 store 的地方,
+  ├── actions.js        # 根级别的 action
+  ├── mutations.js      # 根级别的 mutation
+  └── modules
+      ├── cart.js       # 购物车模块
+      └── products.js   # 产品模块
+```
+
+1个页面分为1个view组件
+
+1个view组件分配1个路由
+
+
+
+### 页面得步骤：
+
+1-每个页面需要得数据先获取
+
+2-在根据功能和内容将UI组件导入
+
+3-将数据渲染到UI组件
+
+4-加上交互和跳转
+
+
+
+
+
+# 插件和工具库的使用理解
+
+全局只有main.js里面有一个Vue实例,其他插件例如router vuex等都是通过将实例挂载到全局Vue实例上实现全局调用
+
+工具库不是插件,如果需要全局使用就需要在全局导入,并在Vue实例的原型注册使用,参照axios如下
+
+```js
+import axios from  'axios'
+Vue.prototype.$axios = axios
+//	通过this.$axios调用
+```
+
+
+
 # axios
 
-导入 import axios from 'axios'
+- 按需导入 import axios from 'axios'
 
-全局注册	Vue.prototype.$axios = axios
 
-通过this.$axios调用
+- 全局注册	Vue.prototype.$axios = axios
+
+  通过this.$axios调用
+
+
 
 
 
