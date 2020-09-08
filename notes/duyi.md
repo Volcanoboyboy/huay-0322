@@ -2411,7 +2411,7 @@ function jiCheng(Target, Origin){
   	//	我们直接修改prototype的时候,因为直接覆盖了,所以需要手动指定构造器
     Target.prototype.constructor = Target;
     //  指明超类
-    Target.prototype.uber = Origin;
+    Target.prototype.super = Origin;
 }
 ```
 
@@ -3387,10 +3387,13 @@ document.addEventListener('DOMContentLoaded', function(){
 
 ```js
 var str = "10000000000000";
-
+		参考一:
     var reg = /(?=(\B)(\d{3})+$)/g;
     str.replace(reg, ".");
     console.log(str.replace(reg, "."));
+
+		参考二:
+		Number(str).toLocalString();
 ```
 
 

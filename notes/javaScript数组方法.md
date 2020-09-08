@@ -14,9 +14,25 @@ Array.isArray(undefined);
 >
 ----
 **2，Array.from() 方法从一个类似数组或可迭代对象创建一个新的，浅拷贝的数组实例。**
+
+```
+Array.from(arrayLike[, mapFn[, thisArg]])
+
+//参数:
+arrayLike
+想要转换成数组的伪数组对象或可迭代对象。伪数组可以写成{length: 10}
+mapFn 可选
+如果指定了该参数，新数组中的每个元素会执行该回调函数。
+thisArg 可选
+可选参数，执行回调函数 mapFn 时 this 对象。
+```
+
+
+
 >**Array.from() 可以通过以下方式来创建数组对象：**  
-. 伪数组对象（拥有一个 length 属性和若干索引属性的任意对象）  
-. 可迭代对象（可以获取对象中的元素,如 Map和 Set 等）  
+>. 伪数组对象（拥有一个 length 属性和若干索引属性的任意对象）  
+>. 可迭代对象（可以获取对象中的元素,如 Map和 Set 等）  
+>
 >>**`从String生成数组`**  
 >>Array.from('array') //output：['a','r','r','a','y',]  
 >>**`从Set生成数组(可用于数组去重)`**  

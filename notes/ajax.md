@@ -1,15 +1,324 @@
 # ajax
 
-利用XMLHttpRequest对象在页面**不刷新不跳转**的情况进行数据交互
+## Promise async/await
 
-## url同一资源定位符
+**promise**
+
+> promise是对异步操作做的封装
+
+方法
+
+- `Promise.all` 接收一个数组,如果数组内所有请求都成功,则请求成功返回一个数组
+- `Promise.race` 竞速,或的方法,先成功取到先用,所有请求都失败才算失败
+
+⚠️`jQuery`中`$.ajax`返回的也是一个`promise`,其实就是融合`promise`封装的
+
+⚠️如果在回调函数参数中使用解构数组接收参数,那就要加括号,不然会报错
+
+**async/await**
+
+> 其实还是语法糖
+
+`await`将函数分解为上下两部分函数,然后await之后还是调用的`.then()`方法,在`then()`方法中调用后面部分的函数,这样内部其实还是异步嵌套的结构,看起来像同步一样的写法
+
+⚠️这样的写法非常完美,但是有一个问题就是不能捕获失败时的错误
+
+解决方案: 利用`try/catch`捕获`async/await`的写法捕获不到的失败错误
+
+
+
+**url最后的#fragment是页面锚点**
+
+**⚠️新型Restful风格的url,url格式一致,都可以在地址里面添加参数(流行)**
+
+
+
+
+
+### Promise
+
+> **避免多层异步调用的回调地狱问题**
+>
+> promise 提供了简洁的API 使得异步操作更加容易
+
+![image-20200908104032942](/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200908104032942.png)
+
+
+
+⚠️**then()函数的参数的返回值如果是promise,就会直接作为then的返回值**
+
+⚠️**如果接收的不是promise,then自身会将返回值包装成promise**
+
+```js
+then((resolve) => {
+	const res = resove();
+	if(res instanceOf Promise) return res;
+	return new Promise((resolve) => {
+		resolve(res)
+	})
+})
+```
+
+
+
+实例方法
+
+- **.then()**
+
+  ```
+  // 可以直接在then里面直接写两个回调,第一个处理成功的响应,第二个处理错误
+  ```
+
+- **.catch()**
+
+  ```
+  // 也可用catch()来处理错误,这样then里面就用一个回调处理成功就可以了
+  这样语义化要好一些
+  ```
+
+- **.finally()**
+
+  ```
+  //不管成功和失败都会执行
+  ```
+
+
+
+#### 静态方法
+
+- Promise.all()
+
+  并发,返回的一个保持原请求顺序的结果数组
+
+- Promise.race()
+
+  返回最快获得的Promise,返回的不再是数组,但是全部请求都发送了,慢的那些不关注,
+
+- Promise.resolve(value)
+
+  来返回一个状态正确的Promise对象,这样就能将该value以Promise对象形式使用。
+
+- Promise.reject(reason)
+
+  返回一个状态为失败的Promise对象
+
+### fetch
+
+> 基于Promise实现的xhr的升级版
+>
+> **fetch不是ajax的进一步封装，而是原生js，没有使用XMLHttpRequest对象**。
+
+- Text()
+
+- Json() 
+
+```js
+fetch("/abc").then(data => {
+    return data.text() //text() -- fetch api 如果用text()那就还要用JSON.parse()
+})
+.then(data => {
+    console.log(data);
+})
+```
+
+⚠️区别fetch各请求,get | post | delete | put 方法请求的参数的却别,参考文档
+
+####  fetch API  中的 HTTP  请求
+
+- fetch(url, options).then(）
+- HTTP协议，它给我们提供了很多的方法，如POST，GET，DELETE，UPDATE，PATCH和PUT
+  - 默认的是 GET 请求
+  - 需要在 options 对象中 指定对应的 method       method:请求使用的方法 
+  - post 和 普通 请求的时候 需要在options 中 设置  请求头 headers   和  body
+
+**请求示例:**
+
+```js
+   <script type="text/javascript">
+        /*
+              Fetch API 调用接口传递参数
+        */
+       #1.1 GET参数传递 - 传统URL  通过url  ？ 的形式传参 
+        fetch('http://localhost:3000/books?id=123', {
+            	# get 请求可以省略不写 默认的是GET 
+                method: 'get'
+            })
+            .then(function(data) {
+            	# 它返回一个Promise实例对象，用于获取后台返回的数据
+                return data.text();
+            }).then(function(data) {
+            	# 在这个then里面我们能拿到最终的数据  
+                console.log(data)
+            });
+
+      #1.2  GET参数传递  restful形式的URL  通过/ 的形式传递参数  即  id = 456 和id后台的配置有关   
+        fetch('http://localhost:3000/books/456', {
+            	# get 请求可以省略不写 默认的是GET 
+                method: 'get'
+            })
+            .then(function(data) {
+                return data.text();
+            }).then(function(data) {
+                console.log(data)
+            });
+
+       #2.1  DELETE请求方式参数传递      删除id  是  id=789
+        fetch('http://localhost:3000/books/789', {
+                method: 'delete'
+            })
+            .then(function(data) {
+                return data.text();
+            }).then(function(data) {
+                console.log(data)
+            });
+
+       #3 POST请求传参
+        fetch('http://localhost:3000/books', {
+                method: 'post',
+            	# 3.1  传递数据 
+                body: 'uname=lisi&pwd=123',
+            	#  3.2  设置请求头 
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .then(function(data) {
+                return data.text();
+            }).then(function(data) {
+                console.log(data)
+            });
+
+       # POST请求传参
+        fetch('http://localhost:3000/books', {
+                method: 'post',
+                body: JSON.stringify({
+                    uname: '张三',
+                    pwd: '456'
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(function(data) {
+                return data.text();
+            }).then(function(data) {
+                console.log(data)
+            });
+
+        # PUT请求传参     修改id 是 123 的 
+        fetch('http://localhost:3000/books/123', {
+                method: 'put',
+                body: JSON.stringify({
+                    uname: '张三',
+                    pwd: '789'
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(function(data) {
+                return data.text();
+            }).then(function(data) {
+                console.log(data)
+            });
+    </script>
+```
+
+
+
+### axios
+
+**请求示例:**⚠️区别各种类型的请求的传参区别
+
+```js
+    # 1. 发送get 请求 
+	axios.get('http://localhost:3000/adata').then(function(ret){ 
+      #  拿到 ret 是一个对象      所有的对象都存在 ret 的data 属性里面
+      // 注意data属性是固定的用法，用于获取后台的实际数据
+      // console.log(ret.data)
+      console.log(ret)
+    })
+	# 2.  get 请求传递参数
+    # 2.1  通过传统的url  以 ? 的形式传递参数
+	axios.get('http://localhost:3000/axios?id=123').then(function(ret){
+      console.log(ret.data)
+    })
+    # 2.2  restful 形式传递参数 
+    axios.get('http://localhost:3000/axios/123').then(function(ret){
+      console.log(ret.data)
+    })
+	# 2.3  通过params  形式传递参数 
+    axios.get('http://localhost:3000/axios', {
+      params: {
+        id: 789
+      }
+    }).then(function(ret){
+      console.log(ret.data)
+    })
+	#3 axios delete 请求传参     传参的形式和 get 请求一样
+    axios.delete('http://localhost:3000/axios', {
+      params: {
+        id: 111
+      }
+    }).then(function(ret){
+      console.log(ret.data)
+    })
+
+	# 4  axios 的 post 请求
+    # 4.1  通过选项传递参数
+    axios.post('http://localhost:3000/axios', {
+      uname: 'lisi',
+      pwd: 123
+    }).then(function(ret){
+      console.log(ret.data)
+    })
+	# 4.2  通过 URLSearchParams  传递参数 
+    var params = new URLSearchParams();
+    params.append('uname', 'zhangsan');
+    params.append('pwd', '111');
+    axios.post('http://localhost:3000/axios', params).then(function(ret){
+      console.log(ret.data)
+    })
+
+ 	#5  axios put 请求传参   和 post 请求一样 
+    axios.put('http://localhost:3000/axios/123', {
+      uname: 'lisi',
+      pwd: 123
+    }).then(function(ret){
+      console.log(ret.data)
+    })
 
 ```
-http://www.baidu.com/p/hemtantjt324.html
+
+
+
+
+
+
+
+### async/await
+
+
+
+
+
+
+
+## ajax
+
+利用XMLHttpRequest对象在页面**不刷新不跳转**的情况进行数据交互
+
+## url统一资源定位符
+
+```
+		http://www.baidu.com/p/hemtantjt324.html
 //	通信协议 服务器地址	文件存放位置
 ```
 
-
+```
+http: 端口默认是80
+https: 端口默认是443
+```
 
 ## 客户端与服务器的通信过程
 
@@ -25,7 +334,7 @@ img表示请求的图片
 
 
 
-## XHR
+## XMLHttpRequest()
 
 通过表单这种会刷新页面,体验比较差
 
@@ -50,7 +359,7 @@ $.get(url[,data][,callback])	//	url必选 data callback可选
 //	data可以是个对象也可以是键值对字符串多个数据以&连接
 $.post()
 
-//	可以发送和get和post请求
+//	可以发送get和post请求
 $.ajax(
 		{
 		type: "",	//	亲求类型
@@ -65,7 +374,7 @@ $.ajax(
 
 ## 数据接口
 
-也就我们的url
+也就是我们的url
 
 例如下面这两个接口
 
@@ -109,9 +418,9 @@ http://www.liulongbin.top:3006/api/delbook		//	删除接口
 
 收集数据的时候
 
-- 只收集有name的标签
+- **只收集有name的标签**
 
-- 以键值对的形式收集,各数据以&符链接例如
+- **以键值对的形式收集,各数据以&符链接例如**
 
   - ```
     username=lion&password=123456
@@ -149,16 +458,16 @@ http://www.liulongbin.top:3006/api/delbook		//	删除接口
 
 
 
-### 提交步骤***
+### 提交步骤⚠️⚠️⚠️
 
 1. 给表单注册提交事件
 2. 阻止默认提交事件
-3. serialize()快速收集数据
+3. serialize()快速收集数据(一般像表单数据在提交的时候是需要验证的)
 4. 发起ajax请求
 
 
 
-清空表单利用DOM对象的ele.reset()方法,注意这里是DOM对象jQ[0] --> DOM
+**提交完有时候需要清空表单利用**DOM对象的ele.reset()方法,注意这里是DOM对象jQ[0] --> DOM
 
 ### 注册提交事件
 
@@ -181,7 +490,7 @@ $('.sub').click(function(){
 })
 ```
 
-- 如果在form表单里面用了button标签,会被默认作为提交按钮
+- 如果在form表单里面用了button标签,会被默认作为提交按钮,所以如果有button可以直接给button注册click事件
 
 
 
@@ -304,7 +613,7 @@ reg.exec()
 JSON.parse()	//	将JSON字符串转化为对象
 JSON.stringify()	//	将对象转化为字符串
 
-//	可以利用这两个的特性做一个简单深拷贝
+//	可以利用这两个的特性做一个简单深拷贝,反正就是创建一个新对象就算是深拷贝
 ```
 
 
@@ -327,6 +636,7 @@ JSON.stringify()	//	将对象转化为字符串
         xhr.send();
         //  监听xhr.onreadystatechange事件,处理响应
         xhr.onreadystatechange = function () {
+          //	这里一定要使用这个判断进入对应状态,相当于switch不然就是获取不到对应的状态响应
             if (xhr.readyState == 4 && xhr.status == 200) {
                 //  xhr.responseText是一个JSON格式的字符串
                 console.log(xhr.responseText, typeof responseText);
@@ -375,7 +685,7 @@ xhr1.onreadystatechange = function () {
 
 ### 查询字符串
 
-放在url地址的末尾加上查询参数,以?开始用&链接多个参数
+**放在url地址的末尾加上查询参数,以?开始用&链接多个参数**
 
 
 
@@ -403,6 +713,7 @@ xhr1.onreadystatechange = function () {
 
   - ```
     xhr.timeout = 3000
+    //	超时响应函数
     xhr.ontimeout = function(event){alert("请求超时")}
     ```
 
@@ -410,6 +721,7 @@ xhr1.onreadystatechange = function () {
 
 - **可以上传文件**
 
+  - 也就是input表单属性为file的元素
   - `DOM.files`对象里面的第0位可以拿到上传的文件对象,如果没有的话length为0
 
 - **可以获得数据传输的进度信息**
@@ -449,7 +761,7 @@ xhr.send(fd)	//	如果发送的是FormData对象就不需要设置请求头,否�
 
 - 情况一 没有表单
   - 利用FromData收集数据
-  - FormData配合ajax发送只能发送post请求,是因为`xhr.send()`里面可以放**查询字符串**也可以放**FormData对象**
+  - FormData配合ajax发送只能发送post请求,是因为`xhr.send()`里面可以放**查询字符串**也可以放**FormData对象**,像fd这种实例对象只能放在send()里面
 
 - 情况二 有表表单
 
@@ -610,7 +922,9 @@ axios({
 
 
 
-端口号不写的话默认是80
+http端口号不写的话默认是80
+
+https端口号不写默认是443
 
 ```
 http://www.test.com:80/main.html
@@ -650,6 +964,7 @@ http://www.test.com:80/main.html
     ```
 
 - **CORS**
+  
   - W3C标准,兼容性比较差一点,出来的比较晚
 
 
@@ -707,7 +1022,7 @@ $('#ipt').on('keyup', function() { // 3. 在触发 keyup 事件时，立即清�
 
 ### 缓存搜索的建议列表
 
-#### 定义全局缓存对象
+#### 定义全局缓存对象(可以直接利用locaStorege,sessionStorege)
 
 #### 将搜索结果保存到缓存对象中
 
@@ -723,15 +1038,13 @@ $('#ipt').on('keyup', function() { // 3. 在触发 keyup 事件时，立即清�
 
 
 
+## ajax预过滤器
 
-
-
-
-
-
-
-
-
+```
+$.ajaxPrefilter(function(options){
+		options.url = "http://ajax.frontend.itheima.net" + options.url;
+})
+```
 
 
 
