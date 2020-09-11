@@ -41,6 +41,26 @@
 >
 > promise 提供了简洁的API 使得异步操作更加容易
 
+⚠️解释：promise 有 3 种状态：pending、fulfilled 或 rejected。状态改变只能是 pending-&gt;fulfilled 或者 pending-&gt;rejected，状态一旦改变则不能再变。
+
+⚠️构造函数中的 resolve 或 reject 只有第一次执行有效，多次调用没有任何作用，呼应代码二结论：promise 状态一旦改变则不能再变。
+
+⚠️promise 的 <code>.then</code> 或者 <code>.catch</code> 可以被调用多次，但这里 Promise 构造函数只执行一次。或者说 promise 内部状态一经改变，并且有了一个值，那么后续每次调用 <code>.then</code> 或者 <code>.catch</code> 都会直接拿到该值。
+
+⚠️<code>.then</code> 或 <code>.catch</code> 返回的值不能是 promise 本身，否则会造成死循环
+
+⚠️<code>.then</code> 或者 <code>.catch</code> 的参数期望是函数，传入非函数则会发生值**被**穿透
+
+⚠️<code>.then</code> 可以接收两个参数，第一个是处理成功的函数，第二个是处理错误的函数。<code>.catch</code> 是 <code>.then</code> 第二个参数的简便写法，但是它们用法上有一点需要注意：<code>.then</code> 的第二个处理错误的函数捕获不了第一个处理成功的函数抛出的错误，而后续的 <code>.catch</code> 可以捕获之前的错误。
+
+⚠️<code>process.nextTick</code> 和 <code>promise.then</code> 都属于 microtask，而 <code>setImmediate</code> 属于 macrotask，在事件循环的 check 阶段执行。<br>事件循环的每个阶段（macrotask）之间都会执行 microtask，事件循环的开始会先执行一次 microtask。
+
+⚠️<code>return</code> 一个同步的值 ，或者 <code>undefined</code>（当没有返回一个有效值时，默认返回undefined）
+
+⚠️Promise回调函数中的第一个参数resolve，会对Promise执行"拆箱"动作。<br>即当resolve的参数是一个Promise对象时，resolve会"拆箱"获取这个Promise对象的状态和值，但这个过程是异步的。
+
+
+
 ![image-20200908104032942](/Users/volcanoboy/Library/Application Support/typora-user-images/image-20200908104032942.png)
 
 

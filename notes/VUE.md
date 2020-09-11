@@ -713,8 +713,10 @@ router.go(n)
 **在所有页面跳转都会触发,这样对特定操作不友好,所以需要路由独享守卫**
 
 ```js
-router.beforeEach(to, from, nextfun)
+router.beforeEach(to, from, next)
 
+// next -- next('/') 或者 next({ path: '/' }): 跳转到一个不同的地址。当前的导航被中断，然后进行一个新的导航。你可以向 next 传递任意位置对象，且允许设置诸如 replace: true、name: 'home' 之类的选项以及任何用在 router-link 的 to prop 或 router.push 中的选项
+// 其实就可以理解为next和编程式导航接受同样的参数
 router.beforeEach(function(to, from, next) {
   if (to.meta.auth) {
     // 需要登录才能访问
@@ -1761,6 +1763,7 @@ destroyed: function () {
 ```js
 // 定义一个名为 button-counter 的新组件
 Vue.component('button-counter', {
+  name: "btn-counter", //	利用name属性给组件命名,不然就是匿名组件
   data: function () {
     return {
       count: 0
@@ -2001,29 +2004,114 @@ hub.$off
 
 
 
+## 路由
+
+⚠️**理解和使用路由嵌套,router-link和router-view的位置**
+
+> 根据不同的用户事件,显示不同的页面内容
+>
+> 本质就是用户事件与处理函数之间的对应关系
+
+- 基本使用
+- 嵌套路由
+- 动态路由匹配
+- 命名路由
+- 编程式导航
 
 
 
+### 基于URL的hash值的路由实现
+
+```
+//	监听hashchange事件,每一次一url的hash值变化,都会触发该事件
+window.onhashChange = function() {}
+
+//	vue里面这个就是用来展示组件的地方,相当于脚手架里面的<router-view></router-view>
+<component :is="component-name"></component>
+```
 
 
 
+### Vue-router
+
+**配置路由**
+
+```js
+//	创建路由实例对象
+var router = new VueRouter({
+
+	// routes 是路由规则数组
+	routes: {
+		//	每个路由规则都是一个配置对象,其中至少包含 path 和component 两个属性:
+		//	path 表示当前路由规则匹配的 hash 地址
+		//	component 表示当前路由规则对应要展示的组件
+		{path: '/user', component: User},
+		{path: '/register', component: Register}
+	}
+})
+```
 
 
 
+### 嵌套路由
+
+> 在组件内定义好子路由链接和路由占位符
+>
+> 然后在对应父路由新增children路由配置
 
 
 
+### 动态路由
+
+> 动态匹配路由参数
+
+- 利用在路由种`props: true` 配置,然后在模版种就可以直接利用props接收参数
+- 还可以配置为`props:{}`
+- 还可以为props配置为函数类型 props: route => ({})
 
 
 
+### 命名路由
+
+```js
+//命名路由可以指定参数,参数以对象形式
+//注意命名路由要进行动态绑定,因为我们导航的是路由的名字,而不知直接的路由地址
+<router-link :to="{ name: 'user', params: {id: 3} }">User3</router-link>
+//	编程式导航也可以用这种方式进行书写
+router.push({ name: 'user', params: {id: 3})
+```
 
 
 
+### ⚠️编程式导航
 
+> a标签和router-link是叫声明式导航
+>
+> 编程式导航利用的路由实例的静态方法
 
+**router实例方法**
 
+```js
+router.push(location, onComplete?, onAbort?)
+router.push(location).then(onComplete).catch(onAbort)
+router.replace(location, onComplete?, onAbort?)
+router.replace(location).then(onComplete).catch(onAbort)
+router.go(n)
+router.back()
+router.forward()
+```
 
-
+```js
+router.push可以提供多种类型的参数
+//	字符串
+router.push("/home")
+//	对象
+router.push({path: '/home'})
+//	命名路由
+router.push({name: '/home', params: {userId: 123}})
+//	查询参数
+router.push({path: "/register", query: { uname: "lisi" }})
+```
 
 
 

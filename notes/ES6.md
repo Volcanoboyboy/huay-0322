@@ -563,3 +563,27 @@ console.log(arr1.copyWithin(3, 1)) // [1,2,3,2,3] 从下标为3的元素开始�
 const arr2 = [1, 2, 3, 4, 5]
 console.log(arr2.copyWithin(3, 1, 2)) // [1,2,3,2,5] 从下标为3的元素开始，复制数组，指定复制
 ```
+
+
+
+## 模块化
+
+语法
+
+```js
+//导出 
+//按需导出
+export const a = 1;
+//默认导出
+export default const a = 1;
+
+
+// 按需导入
+// 解构语法
+import {a, b , c} from "index"
+import { a as new_name } from "index"
+import a from "index"
+//	直接导入文件,会直接执行一次
+import "index"
+```
+

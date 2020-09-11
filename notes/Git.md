@@ -51,6 +51,7 @@ git rm --cached index.css
 git reflog
 git reflog -2
 
+查看完整hash值的版本时,在终端里用q终止程序
 git log 
 git log -2
 
