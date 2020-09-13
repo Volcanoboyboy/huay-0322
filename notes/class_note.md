@@ -37,7 +37,7 @@ CPU --> 内存条 --> 硬盘(机械的比较慢,跟CPU的速度差距太大了)
 
 #### 渲染引擎
 
-解析HTML CSS,内核,例如blik和webkit
+解析HTML CSS,内核,例如blink和webkit
 
 #### JS引擎
 
@@ -209,7 +209,7 @@ switch(num){
 
 
 
-break
+**break** 跳出循环,或者叫终止循环
 
 **continue 必须在循环中使用,放在循环外报错**
 
@@ -243,7 +243,7 @@ splice(start: number, deleteCount?: number): T[];
 
 ​    return只能写一个,写多个也没用
 
-​    return 返回逗号多个值的时候只回返回最后一个
+​    return 返回逗号多个值的时候只回返回最后一个,这是逗号运算符的计算,是取逗号后面的值
 
 
 
@@ -260,6 +260,8 @@ splice(start: number, deleteCount?: number): T[];
 ​    一般会添加数组的push和splice方法,这样会更像数组
 
 ​    可以按照数组遍历arguments
+
+类数组至少要具有一个length属性,**可以直接是 {length: 10}**
 
 
 
@@ -281,7 +283,7 @@ splice(start: number, deleteCount?: number): T[];
 
 ​    1.全局作用域,整个script标签或者是一个单独的js文件
 
-​    2.局部作用域(函数作用域) 在函数内部就是局部作用域
+​    2.局部作用域(函数作用域) 在**函数内部就是局部作用域**
 
 
 
@@ -291,25 +293,25 @@ splice(start: number, deleteCount?: number): T[];
 
 ​    全局作用域的变量和暗示全局变量
 
-​    比较占内存,只有在浏览器被关闭的时候才会被销毁
+​    **比较占内存,只有在浏览器被关闭的时候才会被销毁**
 
 ####     **局部变量**
 
 ​    局部声明的变量和行参属于局部变量(注意暗示全局变量)
 
-​    变量储存在函数中,在函数执行完就销毁,比较节省内存
+​    **变量储存在函数中,在函数执行完就销毁,比较节省内存**
 
 
 
 ####     预解析 代码执行
 
-​    函数声明整体提升,变量声明提升,提升到当前作用域最顶端
+​    函数声明整体提升,变量声明提升,**提升到当前作用域最顶端**
 
 
 
 ####     **对象**
 
-​    对象是由属性和行为组成
+​    **对象是由属性和行为组成**
 
 
 
@@ -429,7 +431,7 @@ querySelectorAll --> 根据选择器来选择到一个类数组
 
 #### 事件三要素
 
-​        1.事件是由三部分组成: 事件源 事件类型 事件处理程序
+​        1.事件是由三部分组成: **事件源 事件类型 事件处理程序**
 
 ​        事件命名不需要驼峰命名
 
@@ -449,7 +451,7 @@ querySelectorAll --> 根据选择器来选择到一个类数组
 
 
 
-表单元素的值需要通过修改input.value而不是element.innerHTMl
+表单元素的值需要通过修改input.value而不是element.innerHtml
 
 操作DOM元素的属性: vlaue type disable
 
@@ -459,7 +461,7 @@ querySelectorAll --> 根据选择器来选择到一个类数组
 
 #### 复制节点/拷贝
 
-​    element.clone()浅拷贝,默认只拷贝当前节点,不管里面的子节点和内容,参数改为true的时候就是深拷贝
+​    element.cloneNode()浅拷贝,默认只拷贝当前节点,不管里面的子节点和内容,参数改为deep的时候就是深拷贝
 
 
 
@@ -469,9 +471,9 @@ querySelectorAll --> 根据选择器来选择到一个类数组
 
 ​    element.innerHTML
 
-​    单个重新渲染就会比较慢,如果先把字符串拼接好,然后再通过一次渲染还是比较快的
+​    单个重新渲染就会比较慢,如果先把字符串拼接好,**然后再通过一次渲染还是比较快的**
 
-​    document.createElement()
+​    **document.createElement()**
 
 ​    这种直接创建元素的方式效率会比较高
 
@@ -479,9 +481,9 @@ querySelectorAll --> 根据选择器来选择到一个类数组
 
 #### 添加绑定事件
 
-​    addEventListenter("event", handel, false);
+​    addEventListenter("event", handel, **false**);
 
-​    第三个参数确定事件传递模式,true为捕获,false为冒泡
+​    第三个参数确定事件传递模式,**true为捕获,false为冒泡**,默认为false
 
 ​    attachEvent("on" + type, function(){
 

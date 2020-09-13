@@ -10,6 +10,27 @@ git checkout -h
 git push -h
 ```
 
+.ssh文件钥匙操作(这里主要是解决同时链接gitee和github)
+
+```
+一、公钥( SSH-Key )问题及解决方法。
+//GitHub SSH-key生成命令
+$ ssh-keygen -t rsa -C 'xxxxx@youdomian.com' -f ~/.ssh/github_id_rsa
+//Gitee SSH-key生成命令
+$ ssh-keygen -t rsa -C 'xxxxx@youdomian.com' -f ~/.ssh/gitee_id_rsa
+二、不同平台共用同一个本地仓库
+关联命令：
+//Gitee
+$ git remote add gitee git@gitee.com:xxx/xxx.git
+//GitHub
+$ git remote add gitHub git@github.com:xxx/xxx.git
+推送命令：
+//github
+$ git push github master
+//Gitee
+$ git push gitee master
+```
+
 ⚠️⚠️⚠️
 
 ```bash

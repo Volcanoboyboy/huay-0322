@@ -3,7 +3,7 @@
 划分项目目录结构(大致的分类),先将不需要的清除一下
 
 ```bash
---vue.config.js	// vue的配置
+--vue.config.js	// vue的配置文件
 --.editorconfig	// 项目风格配置
 
 src
@@ -2115,8 +2115,9 @@ router.push({path: "/register", query: { uname: "lisi" }})
 
 
 
+### vue-cli
 
-
+- 配置文件不支持热加载
 
 
 

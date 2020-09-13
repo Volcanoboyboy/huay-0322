@@ -188,11 +188,13 @@ background:背景颜色背景图片地址背景平铺背景图像滚动背景图
 
 **button默认有border，要手动去掉**
 
+
+
 ### padding
 
-
-
 如何盒子本身没有指定wdth/ height属性则此时 padding不会撑开盒子大
+
+一旦指定了宽高,如果没有指定box-sizing,padding就会附加到盒模型上
 
 ### margin
 
@@ -213,26 +215,31 @@ background:背景颜色背景图片地址背景平铺背景图像滚动背景图
 
 #### 浮动
 
-（float: left/right;内部将元素转换成inline-block，设置position: absolute;--> inline-block）
+（float: left/right;内部会带有inline-block属性，设置position: absolute;--> inline-block）
 
 浮动使元素脱离标准文档流
 
 所有产生了浮动流的元素，块级元素看不到他们
 
-产生了bfc的元素和文本类属性的元素以及文本都能看到浮动元素（想一想那个文字右侧环绕个的题目）
+**产生了bfc的元素和文本类属性的元素以及文本都能看到浮动元素**（想一想那个文字右侧环绕个的题目）
 
 #### 触发BFC条件
 
 (更改这一点渲染规则刚好可以解决margin塌陷的问题)
 
 ```css
-position: absolute;
-display: inline-block;
-float: left/right;
-overflow: hidden;
+BFC 就是块级格式上下文，是页面盒模型布局中的一种 CSS 渲染模式，相当于一个独立的容器，里面的元素和外部的元素相互不影响。创建 BFC 的方式有：
+
+html 根元素
+float 浮动
+绝对定位
+overflow 不为 visiable
+display 为表格布局或者弹性布局
+BFC 主要的作用是：
+
+清除浮动
+防止同一 BFC 容器中的相邻元素间的外边距重叠问题
 ```
-
-
 
 
 
@@ -248,7 +255,7 @@ overflow: hidden;
 
 **任何元素都可以浮动**。不管原先是什么模式的元素,添加浮动之后具有行内块元素相似的特性。
 
-+ 如果块级盒子没有设置宽度,默认宽度和父级样宽,但是添加浮动后,它的大小根据内容来决定
++ 如果**块级盒子没有设置宽度,默认宽度和父级样宽**,但是添加浮动后,它的大小根据内容来决定
 + 浮动的盒子中间是没有缝隙的,是紧挨着一起的
 + 行内元素同理
 
@@ -333,7 +340,7 @@ position: **absolute**;（**内部将元素转换成inline-block**）
 
 1.如果没有祖先元素或者，祖先元素没有定位，则以浏览器为准定位（Document文档）。
 
-2.若果祖先元素有定位（相对、绝对、固定定位），则以最近一级的有定位祖先元素为参考移动位置。
+2.如果祖先元素有定位（相对、绝对、固定定位），则以最近一级的有定位祖先元素为参考移动位置。
 
 3.**绝对定位不再占有标准流**。
 
@@ -393,13 +400,13 @@ Position: sticky;
 
 
 
-**并集选择器**集体申明相同样式(实现内聚，解耦合），给同一个元素同时声明left 和rigth 就是先左后右，先上后下
+**并集选择器**集体申明相同样式(实现内聚，解耦合），**给同一个元素同时声明left 和rigth 就是先左后右，先上后下**
 
 ### 网页布局总结
 
 通过盒子模型,清楚知道大部分htm标签是一个盒子。
 通过CSS浮动、定位可以让每个盒子排列成为网页。
-一个完整的网页,是标隹流、浮动、定位一起完成布局的,每个都有自己的专门用法去。
+一个完整的网页,是标准流、浮动、定位一起完成布局的,每个都有自己的专门用法去。
 1.标准流
 可以让盒子上下排列或者左右排列,垂直的块级盒子显示就用标准流布局。
 2.浮动
@@ -491,7 +498,7 @@ display : inline-flex;
 **不影响弹性盒子的属性**
 
 - [多栏布局模块](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Using_CSS_multi-column_layouts)的 `column-*` 属性对弹性项目无效。
-- [`float`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/float) 与 [`clear`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/clear) 对弹性项目无效。使用 `float` 将使元素的 `display` 属性计为`block`。
+- [`float`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/float) 与 [`clear`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/clear) **对弹性项目无效**。使用 `float` 将使元素的 `display` 属性计为`block`。
 - [`vertical-align`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/vertical-align) 对弹性项目的对齐无效。
 
 
@@ -518,16 +525,6 @@ flex熟悉各种简写：flex:1;|flex:2;|flex:auto;等
 
 
 ## Grid(栅格)布局
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1835,7 +1832,7 @@ number	string 	boolean	undefined	object	function
 
 + && || !
 
-+ <	>	<=	>=
++ <	>	<=	>= 像这类比较运算符,如果存在字符串,js为了不报错,都会隐式调用toString方法
 
 + ==	!=
 
@@ -1845,7 +1842,7 @@ Number('abc');内部调用了isNaN()	-->	NaN
 
 **NaN任何情况都不等于NaN，所以不等于任何**
 
-**绝对相等 === !== 是这两个不发生类型转换**
+**绝对相等 === !== 是这两个不发生类型转换**。-- 这两个在比较的时候是不会发生隐式类型转换的 
 
 
 
@@ -1889,7 +1886,7 @@ typeof(Number("abc"));是Number
 
 **递归：**1.找规律2.找出口
 
-递归只能解决简单问题，复杂问题会很慢，通常都不会用递归
+递归只能解决简单问题，复杂问题会很慢，通常都不会用递归 递归会增加空间复杂度
 
 ```javascript
 // 阶乘
@@ -1931,7 +1928,7 @@ typeof(Number("abc"));是Number
 
 #### 预编译前奏
 
-1.imply global 暗示全局变量：即任何变量，若果变量未经声明就赋值，此变量就为全局对象所有，全局对象就是window,window就是全局的域
+1.imply global 暗示全局变量：**即任何变量，如果变量未经声明就赋值，此变量就为全局对象所有**，全局对象就是window,window就是全局的域
 
 a = 123;	window.a
 
@@ -1939,7 +1936,7 @@ var a = b = 123;(这里的b也属于未声明)	window.b
 
 
 
-2.一切声明的全局变量，全是window的属性
+2.**一切var声明的全局变量**，全是window的属性
 
 var a = 123; -->window.a = 123;
 
@@ -1963,10 +1960,11 @@ function test() {
 }
 test();
 
+//	全局上下文
 GO = {
 		a : 5
 }
-
+//	执行期上下文
 AO = {
 		this : window,
 		a : undefined --> 0
@@ -2144,7 +2142,7 @@ function person(){
 
 **表达式后面直接加()才会被执行，函数声明后面加（）是会报错的**
 
-*被（）执行符号执行的表达式，会自动忽略函数的名字，相当于立即执行函数*
+*被（）执行符号执行的表达式，会自动忽略函数的名字，相当于立即执行函数*,函数表达式的名字会当做函数的一个私有属性,在外部访问不到
 
 
 
@@ -2450,6 +2448,8 @@ function init(){
 
         obj.fun1().fun2();
 
+				但是promise里面不是通过返回this,而是直接返回一个新的promise实例实现连续调用的
+
 ```
 
 
@@ -2459,6 +2459,10 @@ function init(){
 在条件语句或者for in循环当中不能使用obj.prop(内部会编程obj['prop'],这样就是直接访问'prop'值了
 
 而我们是想要访问prop属性,所以应写成obj[prop]
+
+
+
+ob j[] 的中括号之间,只能写字符串,如果写了其他的会隐式调用toString方法
 
 
 
@@ -2498,7 +2502,7 @@ console.log(foo instanceof Aoo)//true
 
 ### 函数表达式
 
-函数一旦变成表达式被立即执行,函数名就会被忽略没有意义了,相当于被系统删除了
+函数一旦变成表达式被立即执行,函数名就会被忽略没有意义了变成 函数的一个内部私有属性
 
 ```js
 				let x = 1;
@@ -3065,6 +3069,7 @@ clearTimenout();
 全局对象window上的方法,内部函数this指向window
 
 + 注意:setInterval("func()", 1000);第一个参数是可以直接写js的
++ 但是第一个参数写字符串会造成内存泄漏
 
 
 
@@ -3080,7 +3085,7 @@ Document.body/documentElement.scrollLeft/srollTop
 
 + 兼容袭比较混乱,用时取两个值相加,因为不可能存在两个同时有值
 
-封装兼容性方法,秋滚动轮滚动距离getScrollOffset()
+封装兼容性方法,求滚动轮滚动距离getScrollOffset()
 
 
 
@@ -3122,7 +3127,7 @@ height和width属性老版本IE并未实现
 
 *dom.offsetLeft, dom.offsetTop*
 
-对于无定位父级的元素,放回相对文档的坐标.对于有定位父级的返回相对于最近的有定位的父级的坐标
+对于无定位父级的元素,返回相对文档的坐标.对于有定位父级的返回相对于最近的有定位的父级的坐标
 
 *dom.offsetParent*
 
@@ -3332,7 +3337,7 @@ JSON是一种传输数据的格式(以对象为样板,本质上就是对象,但�
 
 ## JS加载时间线
 
-1.创建Document对象,开始解析web页面.解析HTML元素和他们问呗内容后添加Elment对象和Text节点到文档中阶段document.readyState = 'loading'
+1.创建Document对象,开始解析web页面.解析HTML元素和他们的文档内容后添加Elment对象和Text节点到文档中阶段document.readyState = 'loading'
 
 2.遇到link外部css,创建线程加载,并继续解析文档
 
@@ -3396,7 +3401,7 @@ var str = "10000000000000";
     console.log(str.replace(reg, "."));
 
 		参考二:
-		Number(str).toLocalString();
+		Number(str).toLocalString();但是这里是被“,”分隔的,后面再用replace方法替换一下就好了
 ```
 
 
