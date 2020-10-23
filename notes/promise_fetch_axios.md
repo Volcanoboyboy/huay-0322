@@ -441,7 +441,7 @@ then((resolve) => {
     })
 
 	# 4  axios 的 post 请求
-    # 4.1  通过选项传递参数
+    # 4.1  通过对象传递参数
     axios.post('http://localhost:3000/axios', {
       uname: 'lisi',
       pwd: 123

@@ -196,7 +196,7 @@ module.exports = {
   	age: 19
 }
 
-//	基于commo.js的模块化导入
+//	基于common.js的模块化导入
 let exp = require("./explore") //	这种自己的模块化是要加 ./ 的
 console.log(exp.username); // li xiao long
 console.log(exp);	//  {username: "li xiao long"}
@@ -786,7 +786,7 @@ app.listen(80, () => {
 
 > 如果使用delete语句会在数据库中删除数据,而这样做有很大风险,推荐使用标记删除
 
-> 标记删除实际就是将数据status状态设为0,status一般我们认为设计的
+> 标记删除实际就是将数据status状态设为0,status一般我们人为设计的
 >
 
 ### 身份认证(权鉴)

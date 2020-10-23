@@ -67,7 +67,7 @@
 
 ⚠️**then()函数的参数的返回值如果是promise,就会直接作为then的返回值**
 
-⚠️**如果接收的不是promise,then自身会将返回值包装成promise**
+⚠️**如果接收的不是promise,then自身会将返回值包装成promise**,而返回的值就会作为下一个then的参数函数的参数
 
 ```js
 then((resolve) => {
@@ -122,7 +122,7 @@ then((resolve) => {
 
   返回一个状态为失败的Promise对象
 
-### fetch
+### fetch(fetch是标准方案)
 
 > 基于Promise实现的xhr的升级版
 >
@@ -141,13 +141,13 @@ fetch("/abc").then(data => {
 })
 ```
 
-⚠️区别fetch各请求,get | post | delete | put 方法请求的参数的却别,参考文档
+⚠️区别fetch各请求,get | post | delete | put 方法请求的参数都有区别,参考文档
 
 ####  fetch API  中的 HTTP  请求
 
 - fetch(url, options).then(）
 - HTTP协议，它给我们提供了很多的方法，如POST，GET，DELETE，UPDATE，PATCH和PUT
-  - 默认的是 GET 请求
+  - **默认的是 GET 请求**
   - 需要在 options 对象中 指定对应的 method       method:请求使用的方法 
   - post 和 普通 请求的时候 需要在options 中 设置  请求头 headers   和  body
 
@@ -177,7 +177,7 @@ fetch("/abc").then(data => {
                 method: 'get'
             })
             .then(function(data) {
-                return data.text();
+                return data.text();// 如果使用的是.text()方法,那就要是解析,因为后台一般返回的都是JSON对象,但是如果使用的是data.json()
             }).then(function(data) {
                 console.log(data)
             });
@@ -267,7 +267,7 @@ fetch("/abc").then(data => {
     axios.get('http://localhost:3000/axios/123').then(function(ret){
       console.log(ret.data)
     })
-	# 2.3  通过params  形式传递参数 
+	# 2.3  通过params  形式传递参数 ,如果不在url中传参那就只能以params传
     axios.get('http://localhost:3000/axios', {
       params: {
         id: 789
@@ -364,7 +364,7 @@ img表示请求的图片
 
 #### get|post
 
-get用于向服务端获取资源(获取数据信息图片等)
+get用于向服务端获取资源(获取数据信息图片等) 简单的,数据少的,对安全要求不高的请求
 
 post用于向服务端发送资源(例如用户名邮箱密码等)
 
@@ -385,7 +385,9 @@ $.ajax(
 		type: "",	//	亲求类型
 		url: "",	//	地址
 		data: "",	//	参数
-		success: function(){}	//	回调函数
+		success: function(){},	//	回调函数
+    error: function() {},
+    finally: function() {} // 最终都会执行finally,这个就是后面promise的设置模式
 	}
 )		
 ```
@@ -487,7 +489,7 @@ http://www.liulongbin.top:3006/api/delbook		//	删除接口
 
 
 
-**提交完有时候需要清空表单利用**DOM对象的ele.reset()方法,注意这里是DOM对象jQ[0] --> DOM
+**提交完有时候需要清空表单利用**DOM对象的ele.reset()方法,注意这里是DOM对象jQ[0] (或者JQ.get(0))--> DOM
 
 ### 注册提交事件
 
@@ -600,7 +602,7 @@ reg.exec()
 
 ### JSON
 
-*JavaScript Object Notation* js对象表示法 2001年开始推广
+*JavaScript Object Notation* --- js对象表示法 2001年开始推广
 
 前端用的比较多的是JSON
 
@@ -660,6 +662,7 @@ JSON.stringify()	//	将对象转化为字符串
             if (xhr.readyState == 4 && xhr.status == 200) {
                 //  xhr.responseText是一个JSON格式的字符串
                 console.log(xhr.responseText, typeof responseText);
+              	// 这里其实可以不用判断,后台返回的一般都是JSON字符串,肯定是需要解析的,一般我们用框架不用										 解析是框架都帮我们封装好了
                 //  转成JSON对象
                 let data = JSON.parse(xhr.responseText);
                 console.log(data);
@@ -981,6 +984,8 @@ http://www.test.com:80/main.html
     </script>
     
     <script src="http://www.liulongbin.top:3006/api/jsonp?callback=test&name=无敌风火龙&age=18"></script>
+    
+    ifram也可以实现跨域,其实ifram本身就是不同的页面
     ```
 
 - **CORS**
@@ -989,7 +994,7 @@ http://www.test.com:80/main.html
 
 
 
-### JQuery $.ajax()发起jsonp请求
+### JQuery $.ajax()发起jsonp请求(jsonp不是http请求啊)
 
 `$.ajax()`也可以发起`jsonp`请求,只需要定义`datatype: 'jsonp'`
 

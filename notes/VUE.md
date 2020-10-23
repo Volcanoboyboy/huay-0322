@@ -172,6 +172,8 @@ methods: {
 
 #### V-if v-else
 
+**组件如果没有被销毁的情况是默认缓存数据的,这时候第二次使用的时候是会使用缓存数据的,这时候我们使用v-if是比较合适的,通过销毁和重新渲染来达到刷新数据和视图的效果**
+
 V-if 和v-else之间不允许出现其他元素
 
 新增了一个v-else-if
@@ -259,6 +261,8 @@ vue总是会尽量用已经存在DOM元素进行渲染以获得性能上的提�
 
 有时也需要在内联语句处理器中访问原始的 DOM 事件。可以用特殊变量⚠️⚠️⚠️**事件对象变量** `$event` 把它传入方法
 
+$event作为事件参数实际没有位置的区别,只要名字是这个就行了,放在各个位置是没有区别的
+
 且必须使用`$event`命名
 
 #### 计算属性computed
@@ -267,13 +271,17 @@ vue总是会尽量用已经存在DOM元素进行渲染以获得性能上的提�
 
 只要计算一次就会进行缓存
 
+但是如果原数据一旦变化,计算属性就会自动重新计算
+
 可以设置一个时间对象计算属性进行比较 `new Date()`,比较是不是缓存
 
-**cuomputed带有两个属性 set get**
+**computed带有两个属性 set get**
 
 #### 事件修饰符
 
 常用的一些修饰符
+
+- sync修饰符相当于v-model
 
 + stop阻止事件冒泡
 
@@ -342,7 +350,40 @@ vue总是会尽量用已经存在DOM元素进行渲染以获得性能上的提�
 
 
 
+## [自定义组件的 `v-model`](https://cn.vuejs.org/v2/guide/components-custom-events.html#自定义组件的-v-model)
+
+> 2.2.0+ 新增
+
+一个组件上的 `v-model` 默认会利用名为 `value` 的 prop 和名为 `input` 的事件，但是像单选框、复选框等类型的输入控件可能会将 `value` attribute 用于[不同的目的](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox#Value)。`model` 选项可以用来避免这样的冲突：
+
+```
+Vue.component('base-checkbox', {
+  model: {
+    prop: 'checked',
+    event: 'change'
+  },
+  props: {
+    checked: Boolean
+  },
+  template: `
+    <input
+      type="checkbox"
+      v-bind:checked="checked"
+      v-on:change="$emit('change', $event.target.checked)"
+    >
+  `
+})
+```
+
+⚠️**自定义事件修改数据是同步的,但是vue视图渲染是异步的,所有在视图没刷新的时候,子组件获取的还是原来的数据**
+
+
+
+
+
 # 组件
+
+如果发现组件存在缓存影响视图的时候,我们可以合理利用v-if来及时销毁组件
 
 #### 全局注册
 
@@ -503,7 +544,7 @@ Vue 的过渡系统提供了非常多简单的方法设置进入、离开和列�
 
 
 
-#### 混入对象
+#### 混入对象 -- 可以理解为配置的模块化
 
 `minins`
 
@@ -894,16 +935,6 @@ import {mapState} from 'vuex'
 
 
 
-## 登录注册
-
-```
-
-```
-
-
-
-
-
 #### TypeScript支持
 
 TypeScript 可能在推断某个方法的类型的时候存在困难。因此，你可能需要在 `render` 或 `computed` 里的方法上标注返回值
@@ -985,26 +1016,107 @@ export default new Vuex.Store({
   //数据的改动methods,在mutation里处理状态,这里所有的方法都是同步方法,不能做ajax异步操作
   //	不能有任何副作用,即不能做异步操作,以便于数据可以返回,没有其他影响
   //  数据的改动必须commit一个mutations
+  //  方法的第一参数默认为state里面的要操作的一个数据,payload为所需要传的载荷,只能传一个参数,可以为数组和				对象
   mutations,
   
   //异步方法 带有副作用的操作就放在这里
   //通过dispatch触发一个action,然后在action里面提交mutation修改数据等操作
   actions,
   
-  //模块
+  //模块化 -- 如果应用变得复杂store变得臃肿的时候,可以导出多个小的store形成模块化
+  //在模块化的时候为了不影响各个仓库,每个仓库都应该使用命名空间 --> nameSpace: true
+  //在使用的时候
   modules: {
     buyCar
   }
 })
+
+
+state: 全局状态也就是全局数据
+			 在组件里面可以通过$store.state....访问到数据,且数据变动时,会自动完成渲染
+       但是这样写会很长,所以一般用一个计算属性,同时可以结合vue提供的辅助函数
+       mapGetters|mapState|mapMutations|mapActions
+
+getters: 全局计算属性,只包装数据不改变数据,想要从state获取新的格式数据的操作都放在这里做计算属性
+
+mutations: 修改全局状态的唯一方法(不能做异步操作)
+					 #mutations方法名可以用ES6计算属性名完美优化mutation
+
+actions: 内部通过commit一个mutation来修改状态
+				 其他组件dispatch一个action来提交mutation间接修改全局状态(可以做异步操作)
+				 #其实质就是包了一层可以异步的mutation
+
+modules: sotre模块化,当项目复杂用这个配置导出分块的小store
+				 默认情况下，小store内部的 action、mutation 和 getter 是注册在全局命名空间的
+         这个时候为了各个mutation和action互不影响,#要为小store开启命名--> namespaced: true
+         //这时候提交mutation和分发action都要带上命名空间的文件名
+				 
+				 当模块被注册后，它的所有 getter、action 及 mutation 都会自动根据模块注册的路径调整命名
+         例如: // 模块内容（module assets）
+              state: () => ({ ... }), // 使用 `namespaced` 属性不会对其产生影响
+              getters: {
+                isAdmin () { ... } // -> getters['account/isAdmin']
+              },
+              actions: {
+                login () { ... } // -> dispatch('account/login')
+              },
+              mutations: {
+                login () { ... } // -> commit('account/login')
+              },
+				
+          如果你希望在带命名空间的模块内使用全局 state 和 getter，rootState 和 rootGetters 会作为第三					和第四参数传入 getter，也会通过 context 对象的属性传入 action。
+					例如: 
+                getters: {
+                // 在这个模块的 getter 中，`getters` 被局部化了
+                // 你可以使用 getter 的第四个参数来调用 `rootGetters`
+                someGetter (state, getters, rootState, rootGetters) {
+                  getters.someOtherGetter // -> 'foo/someOtherGetter'
+                  rootGetters.someOtherGetter // -> 'someOtherGetter'
+                },
+                  
+                actions: {
+                // 在这个模块中， dispatch 和 commit 也被局部化了
+                // 他们可以接受 `root` 属性以访问根 dispatch 或 commit
+                someAction ({ dispatch, commit, getters, rootGetters }) {
+                  getters.someGetter // -> 'foo/someGetter'
+                  rootGetters.someGetter // -> 'someGetter'
+
+                  dispatch('someOtherAction') // -> 'foo/someOtherAction'
+                  dispatch('someOtherAction', null, { root: true }) // -> 'someOtherAction'
+
+                  commit('someMutation') // -> 'foo/someMutation'
+                  commit('someMutation', null, { root: true }) // -> 'someMutation'
+                },
+
+                  
+严格模式: 在创建store时使用strict: true,既可以保证修改全局状态只会通过mutation,如果不是就会报错
+         但是⚠️在发布模式的时候不要使用严格模式,会消耗性能
+         #  strict: process.env.NODE_ENV !== 'production'
+         // 在生产环境是需要严格模式的,因为默认情况下虽然mutation里面不允许写异步操作,但是没开严格模式的							时候写了异步也不会报错而且也可以执行,只是vuex无法跟踪数据
+
+表单处理: 全局的状态用于表单的时候不能使用v-model,会直接修改全局状态,这样违背了mutation改数据的唯一性
+         这个时候推荐使用带有setter的计算属性比较完美的解决了这个问题,而且具有响应式
+         computed: {
+            message: {
+              get () {
+                return this.$store.state.obj.message
+              },
+              set (value) {
+                this.$store.commit('updateMessage', value)
+              }
+            }
+          }
+
+⚠️mapState、mapGetters方法放在computed配置项里面
+⚠️mapActions、mapMutations方法放在methods配置项里面
+
 使用:
 在组件里面可以通过$store.state....访问到数据,且数据变动时,会自动完成渲染
 但是这样写会很长,所以一般用一个计算属性,同时可以结合vue提供的辅助函数
 mapGetters|mapState|mapMutations|mapActions
 学会使用这几个函数,数据和计算属性就比较简单的了 
 
-改动: mutation(只能做没有副作用的操作) [action(可以处理副作用的操作) --> mutation]
-更改 Vuex 的 store 中的状态的唯一方法是提交 mutation
-数据的改动必须commit一个mutations
+
 
 ```
 
@@ -1079,6 +1191,7 @@ store.dispatch({
 
 ```js
 let option = {
+  // 混入对象和原配置的钩子函数如果冲突就以混入对象的钩子为准,除了钩子以外的其他配置都是合并的
     created(){
         console.log("组件创建");
     },
@@ -1116,7 +1229,7 @@ const vm = new Vue({
 
 像vue自带的插件router,vue会在看到的时候自动调用vue.use(router)
 
-#### 自定插件及其使用
+#### 自定义插件及其使用
 
 ```
 			let lcPlugin = {
@@ -1149,7 +1262,7 @@ const vm = new Vue({
 					  Vue.mixin({
 					    created: function () {
 					      // 逻辑...
-						  console.log("这是混入得生命周期")
+						  console.log("这是混入的生命周期")
 					    }
 					    //...
 					  })
@@ -1327,7 +1440,7 @@ filters: {
    > v-开头
 
    ```
-   //	利用 v-cloak解决插值表达式的闪动问题,在脚手架里面是不存在闪动
+   //	利用 v-cloak解决插值表达式的闪动问题,在脚手架里面文件话组件是不存在闪动
    [v-cloak]{
    	display: none;
    }
@@ -1382,7 +1495,7 @@ Object.defineProperty(obj, "age", {
 //语法
 v-on:"标准事件名"
 //简写
-@:click="handle" 没有参数的时候handle和handle()是一样的
+@:click="handle" 没有参数的时候handle和handle()是一样的,但是没有括号第一个参数是事件,带了括号就是$event
 
  methods: {
         handle(p1, p2, event){ // 如果绑定函数调用,事件对象必须以形参名$event进行传递,位置可以不固定
@@ -1476,7 +1589,7 @@ errorCalss {
 
 ### style样式绑定
 
-⚠️s**tyle样式绑定是接受一个对象或者数组,参照css是一个格式**
+⚠️**style样式绑定是接受一个对象或者数组,参照css是一个格式**
 
 样式如果带“-”就改成大驼峰,background-color --> backgroundColor
 
@@ -1549,6 +1662,7 @@ v-show
 **钩子函数的参数** (即 `el`、`binding`、`vnode` 和 `oldVnode`
 
 ```js
+# 注意,在定义指令的时候是不需要v-的,但是在写的时候是需要v-color的
 //	全局自定义指令  
 //  不带参数的指令
   Vue.directive("focus", {
@@ -1616,6 +1730,8 @@ default: function () {
 > 写在watch配置项里面
 >
 > Vue:当需要在数据变化时执行异步或开销较大的操作时，这个方式是最有用的
+>
+> 例子: 在输入框输入文本的时候要缓存到本地以做下次搜索的历史记录,这个时候就可以使用帧听器
 
 - 帧听器是帧听数据变化,然后在帧听器里面做相应的操作
 - 配置: 
@@ -1686,6 +1802,7 @@ beforeCreate: function () {
     console.log(this.msg);
 },
 //	已经有数据了,但是没有进行挂载的DOM渲染,区别mounted
+  # 这里没有渲染DOM是指没有渲染vue的模版,其他DOM是有的
   //	自动调用
   //	⚠️提前载入数据可以增加用户体验,
 created: function () {
@@ -1739,7 +1856,7 @@ destroyed: function () {
 
 
 
-### 数据响应式方法补充
+### ⚠️数据响应式方法补充
 
 `Vue.$set()`
 
@@ -1782,7 +1899,7 @@ Vue.component('button-counter', {
 ⚠️命名
 
 - 可以以短横线hello-world,大驼峰HelloWorld命名(推荐)
-- 总结: 注册时就用大驼峰,其他地方使用的时候都用短横线,不会出错
+- 总结: **注册时就用大驼峰,其他地方使用的时候都用短横线,不会出错**
 
 ### 局部注册
 
@@ -1889,7 +2006,7 @@ vm.$emit( eventName, […args] )
 const hub = new Vue()
 //	监听
 hub.$on
-//	触发 -- 不能直接写在元素中,会报为定义
+//	触发 -- 不能直接写在元素中,会报未定义
 hub.$emit
 //	销毁 -- 执行销毁函数后,事件就失效来
 hub.$off
@@ -1903,6 +2020,7 @@ hub.$off
 
 > 放在组件中的<slot></slot>标签,也就是在组件中间的位置
 >
+> 默认情况下没有插槽的组件式不允许写内容的,写了也不会显示,没有地方放内容,能写的情况下至少有一个默认插槽
 
 **插槽和属性的区别**
 
@@ -1969,7 +2087,7 @@ hub.$off
 
 
 
-#### 解构属性
+#### 在作用域插槽中利用解构获取属性也是很好的方式
 
 ```
 <current-user v-slot="{ user: person }"> //	可以重命名
@@ -2014,7 +2132,7 @@ hub.$off
 
 - 基本使用
 - 嵌套路由
-- 动态路由匹配
+- 动态路由匹配 -- 如果出现多级路由参数,最好使用命名带查询参数路由
 - 命名路由
 - 编程式导航
 
@@ -2028,6 +2146,8 @@ window.onhashChange = function() {}
 
 //	vue里面这个就是用来展示组件的地方,相当于脚手架里面的<router-view></router-view>
 <component :is="component-name"></component>
+
+// 上述这种方式也可动态渲染view,基于url中的路由变化,触发window.onhashChange事件,同时还有可以帧听$roter的变化,配合<component></component>的is属性动态渲染指定组件
 ```
 
 
@@ -2118,23 +2238,265 @@ router.push({path: "/register", query: { uname: "lisi" }})
 ### vue-cli
 
 - 配置文件不支持热加载
+- 重配置后需要重启项目
 
 
 
+# vue项目优化
+
+> https默认端口443
+
+**项目优化实现步骤:**
+
+- 生成打包报告,根据报告优化项目
+- 第三方库启用CDN
+- Element-UI组件按需加载
+- 路由懒加载
+- 首页内容定制
 
 
 
+**具体优化细节**
+
+1. **添加进度条**
+
+   ```
+   //	主要利用nprogress插件的两个方法
+   //	在axios请求拦截器和响应拦截器分别设置
+   NProgress.start()
+   NProgress.done()
+   ```
+
+2. **运行serve根据报错修改代码**
+
+   ```
+   //出现分行报错和格式化冲突的时候,将每行的文字量改为200(默认80)
+   {
+       "semi":false,
+       "singleQuote":true,
+       "printWidth":200
+   }
+   ```
+
+3. **执行build,利用babel-plugin-transform-remove-console移除生成阶段console,**
+
+   ```
+   //项目发布阶段需要用到的babel插件
+   const productPlugins = []
+   
+   //判断是开发还是发布阶段,process.env.NODE_ENV是固定写法获取状态
+   if(process.env.NODE_ENV === 'production'){
+     //发布阶段
+     productPlugins.push("transform-remove-console")
+   }
+   
+   module.exports = {
+     "presets": [
+       "@vue/app"
+     ],
+     "plugins": [
+       [
+         "component",
+         {
+           "libraryName": "element-ui",
+           "styleLibraryName": "theme-chalk"
+         }
+       ],
+       ...productPlugins
+     ]
+   }
+   ```
+
+4. **生成打包报告**
+
+   ```
+   //命令行生成打包报告
+   vue-cli-service build --report
+   
+   //	GUI 运行build 运行查看分析,控制台面板查看报告
+   ```
+
+5. **修改webpack的默认配置**
+
+   ```
+   默认情况下vue-cli 3.0生成的项目,隐藏了webpack配置项,如果我们需要配置webpack需要通过vue.config.js来配置
+   
+   //	为不同的模式配置不同的打包入口
+   module.exports = {
+       chainWebpack:config=>{
+           //发布模式
+           config.when(process.env.NODE_ENV === 'production',config=>{
+               //entry找到默认的打包入口，调用clear则是删除默认的打包入口
+               //add添加新的打包入口
+               config.entry('app').clear().add('./src/main-prod.js')
+           })
+           //开发模式
+           config.when(process.env.NODE_ENV === 'development',config=>{
+               config.entry('app').clear().add('./src/main-dev.js')
+           })
+       }
+   }
+   
+   //补充：
+   chainWebpack可以通过链式编程的形式，修改webpack配置
+   configureWebpack可以通过操作对象的形式，修改webpack配置
+   ```
+
+   
+
+6. **加载外部CDN**
+
+   ```
+   默认情况下，依赖项的所有第三方包都会被打包到js/chunk-vendors.******.js文件中
+   导致js文件过大,我们可以通过externals排除这些包,使他们不被打包到js/chunk-vendors.******.js文件中
+   
+   
+   module.exports = {
+       chainWebpack:config=>{
+           //发布模式
+           config.when(process.env.NODE_ENV === 'production',config=>{
+               //entry找到默认的打包入口，调用clear则是删除默认的打包入口
+               //add添加新的打包入口
+               config.entry('app').clear().add('./src/main-prod.js')
+   
+               //使用externals设置排除项
+               //当遇到import Vue from 'vue'这样的代码,就会直接在全局在全局找Vue这变量
+               //而我们用<script src=""></script> CDN这种形式导入的vue刚好在全局挂载了一个Vue变量
+               config.set('externals',{
+                   vue:'Vue',
+                   'vue-router':'VueRout er',
+                   axios:'axios',
+                   lodash:'_',
+                   echarts:'echarts',
+                   nprogress:'NProgress',
+                   'vue-quill-editor':'VueQuillEditor'
+               })
+           })
+           //开发模式
+           config.when(process.env.NODE_ENV === 'development',config=>{
+               config.entry('app').clear().add('./src/main-dev.js')
+           })
+       }
+   }
+   
+   //然后打开public/index.html添加外部cdn引入代码
+   
+   
+   
+   ```
+
+7. **定制首页内容**
+
+   ```
+   module.exports = {
+       chainWebpack:config=>{
+           config.when(process.env.NODE_ENV === 'production',config=>{
+               ......
+               
+               //使用插件
+               config.plugin('html').tap(args=>{
+                   //添加参数isProd
+                   args[0].isProd = true
+                   return args
+               })
+           })
+   
+           config.when(process.env.NODE_ENV === 'development',config=>{
+               config.entry('app').clear().add('./src/main-dev.js')
+   
+               //使用插件
+               config.plugin('html').tap(args=>{
+                   //添加参数isProd
+                   args[0].isProd = false
+                   return args
+               })
+           })
+       }
+   }
+   
+   然后在public/index.html中使用插件判断是否为发布环境并定制首页内容
+   
+   <!DOCTYPE html>
+   <html lang="en">
+     <head>
+       <meta charset="utf-8">
+       <meta http-equiv="X-UA-Compatible" content="IE=edge">
+       <meta name="viewport" content="width=device-width,initial-scale=1.0">
+       <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+       <title><%= htmlWebpackPlugin.options.isProd ? '' : 'dev - ' %>电商后台管理系统</title>
+   
+       <% if(htmlWebpackPlugin.options.isProd){ %>
+       <!-- nprogress 的样式表文件 -->
+       <link rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+       ........
+       <!-- element-ui 的 js 文件 -->
+       <script src="https://cdn.staticfile.org/element-ui/2.8.2/index.js"></script>
+       <% } %>
+     </head>
+     .......
+   ```
+
+   
+
+8. **路由懒加载**
+
+   ⚠️脚手架创建的项目的时候打包插件babel预设已经装了
+
+   ```
+   安装插件@babel/plugin-syntax-dynamic-import
+   实现组件的模块化按需加载
+   在babel.config.js中声明该插件
+   
+   
+   //项目发布阶段需要用到的babel插件
+   const productPlugins = []
+   
+   //判断是开发还是发布阶段
+   if(process.env.NODE_ENV === 'production'){
+     //发布阶段
+     productPlugins.push("transform-remove-console")
+   }
+   
+   module.exports = {
+     "presets": [
+       "@vue/app"
+     ],
+     "plugins": [
+       [
+         "component",
+         {
+           "libraryName": "element-ui",
+           "styleLibraryName": "theme-chalk"
+         }
+       ],
+       ...productPlugins,
+       //配置路由懒加载插件
+       "@babel/plugin-syntax-dynamic-import"
+     ]
+   }
+   ```
+
+9. **项目上线**
+
+   ```
+   配置https服务器
+   Gzip压缩代码,在配置静态文件中间件之前配置app.use(compression())压缩中间件
+   
+   使用pm2管理应用(pm2可以在服务器程序关闭的情况下依然能正常托管静态文件)
+   // pm2操作
+   打开vue_shop_server文件夹的终端，输入命令：npm i pm2 -g
+   使用pm2启动项目，在终端中输入命令：pm2 start app.js --name 自定义名称
+   查看项目列表命令：pm2 ls
+   重启项目：pm2 restart 自定义名称 / id
+   停止项目：pm2 stop 自定义名称 / id
+   删除项目：pm2 delete 自定义名称 / id
+   保存任务到磁盘: pm2 save // 这样就算是关机也会保存任务
+   更新任务: pm2 updata
+   
+   这样就算我们把服务器程序终端关闭,静态资源依然可以访问
+   ```
 
 
 
-
-
-
-
-
-
-
-
-
-
+然而这才是一切的开始...
 

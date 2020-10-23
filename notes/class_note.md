@@ -54,7 +54,7 @@ JS解释器,用来读取网页中Javascript代码,对其处理后运行, chrome 
             机器语言    汇编语言    高级语言(C C++ java js python php golang)
         
         js的三种引入方式
-        <!-- 1.行内式 直接写到与元素内部 -->
+        <!-- 1.行内式 直接写到元素内部 -->
         <!-- 2.引入式 通过<script src="main.js">标签引入,外部引入标签中间不允许使用代码,使用了代码也不会执行 -->
         <!-- 3.内嵌式 直接在结构中直接通过<script>标签嵌入 -->
 
@@ -275,7 +275,7 @@ splice(start: number, deleteCount?: number): T[];
 
 ​        函数表达式也可以进行传递参数
 
-​        函数表达式不允许出现函数名,会报错
+​        函数表达式不要出现函数名,函数会把名字做为函数的一个内部变量
 
 
 
@@ -513,7 +513,7 @@ querySelectorAll --> 根据选择器来选择到一个类数组
 
 如果不同的元素各有捕获和冒泡,那就先捕获然后再冒泡
 
-+ 有些事件是没有冒泡的 例如 oblur onfocus onmouseenter onmouseleavue
++ 有些事件是没有冒泡的 例如 oblur onfocus onmouseenter onmouseleave
 
 
 
@@ -521,7 +521,7 @@ querySelectorAll --> 根据选择器来选择到一个类数组
 
 #### 事件对象
 
-​    事件对象只有有李事件才会存在,它是系统自动创建的,不需要我们传参
+​    事件对象只有有事件才会存在,它是系统自动创建的,不需要我们传参
 
 ​    事件对象是一系列数据的集合,里面包含事件的相关信息
 
@@ -603,7 +603,7 @@ querySelectorAll --> 根据选择器来选择到一个类数组
 
 
 
-​    DOMContentLoaded在DOM结构渲染完成以后就会触发这个事件,相对比较快也比较合理
+​    DOMContentLoaded在**DOM结构渲染完成**以后就会触发这个事件,相对比较快也比较合理
 
 
 
@@ -633,7 +633,7 @@ querySelectorAll --> 根据选择器来选择到一个类数组
 
 ​    2.异步任务放到任务队列中
 
-​    3.一旦执行棧中的所有同步任务执行完毕,系统就会按次序读取任务队列中的异步任务,于是被读取的异步任务结束等待状态,进入执行棧,开始执行
+​    3.一旦执行棧中的所有同步任务执行完毕,系统就会按次序读取任务队列中的异步任务,于是被读取的异步任务结束等待状态,进入执行棧,开始执行(在每次异步任务间隙会一次性执行完所有微异步)
 
 
 
@@ -650,6 +650,8 @@ querySelectorAll --> 根据选择器来选择到一个类数组
 ​    location是window的一个属性 叫统一资源定位符(Uniform Resource Locator, URL)
 
 ​    组成 protocol host port path query fragment 
+
+​			**协议+主机+端口+路径+查询参数**
 
 
 
@@ -793,7 +795,7 @@ scrollLeft	被卷去的左侧宽度,不带单位
 !!!注意：scrollTop的使用方式是element.scrollTop，而不是element.style.scrollTop
 
 scrollWidth	返回实际宽度,不包含边框,不带单位
-scrollHeight	放回实际高度,不包含边框,不带单位
+scrollHeight	返回实际高度,不包含边框,不带单位
 
 页面被卷进的头部可以用
 window.pageYOffset  == document.documentElement.scrollTop(H5模式) == document.body.scrollTop(混杂模式)
@@ -895,8 +897,8 @@ element.calssList.replace(foo, bar)	//	用bar类替换foo类
 
 `sessionStorage`	约5M
 
-1. 生命周期为关闭浏览器窗口
-2. 在同一页面下数据可以共享
+1. 生命周期为关闭应用
+2. 在同应用下数据可以共享
 3. 以键值对形式储存
 
 + 方法
@@ -1004,6 +1006,10 @@ let index = $(this).index();
 
 **jQuery里面的类操作是追加或者选择删除,不影响原来的类**
 
+
+
+
+
 ```
 show(speed, easing, callback)
 里面包含三个参数
@@ -1064,7 +1070,7 @@ show(speed, easing, callback)
 
 **遍历**
 
-- each(function(index, domEle){}) 这里 迭代器domEle是一个DOM对象
+- 类数组.each(function(index, domEle){}) 这里 迭代器domEle是一个DOM对象
 - jquery里面还自带一个$each(arr, function(index, ele))
 
 
@@ -1084,7 +1090,7 @@ $("<p></p>")
 **删**
 
 - remove() 删除选中
-- empty() 清空内部元素
+- empty() 清空内部元素,但自己不做操作
 - html("")
 
 empty() 清空内部元素
@@ -1095,7 +1101,7 @@ html("")
 
 **尺寸**
 
-- width()/height()获取或设置修改尺寸 只算widht和height
+- width()/height()获取或设置修改尺寸 只算content的widht和height
 - innerWidth() innerHeight() 包括padding
 - outerWidth() outerHeight() 包括border 
 
@@ -1151,7 +1157,7 @@ $(*selector*).on(*event,childSelector,data,function*)
 
 ```
 off()	//解绑所有事件
-off("click")	//接触指定时间
+off("click")	//解绑指定事件
 one()	//用此方法绑定事件,事件只会触发一次
 ```
 
@@ -1354,7 +1360,19 @@ Child2.test3(); // 3
 
 #### Element.insertAdjacentHTML()
 
-**可以直接添加字符串到父元素,可以识别html结构**
+> 这样插入的元素不需要进行序列化,这样是比操作innerHTML更快
+
+```
+element.insertAdjacentHTML(position, text);
+```
+
+- `position`
+
+  一个 [`DOMString`](https://developer.mozilla.org/zh-CN/docs/Web/API/DOMString)，表示插入内容相对于元素的位置，并且必须是以下字符串之一：`'beforebegin'`：元素自身的前面。`'afterbegin'`：插入元素内部的第一个子节点之前。`'beforeend'`：插入元素内部的最后一个子节点之后。`'afterend'`：元素自身的后面。
+
+- `text`
+
+  是要被解析为HTML或XML元素，并插入到DOM树中的 [`DOMString`](https://developer.mozilla.org/zh-CN/docs/Web/API/DOMString)。
 
 
 
@@ -1386,6 +1404,8 @@ Child2.test3(); // 3
 
 
 ### 对象原型 `__proto__`
+
+> 这个属性是浏览器实现的,非标准,但是大家都实现了
 
 对象都会有一个属性 `_proto__`指向构造函数的prototype原型对象,之所以我们对象可以使用构造函数prototype原型对象的属性和方法,就是因为对象有 `__proto__`原型的存在
 
@@ -1536,6 +1556,10 @@ let refunc = func.bind(obj);//	这里不会执行,只会绑定
 refunc();//	lion
 ```
 
+⚠️**call 和 apply不能改变通过bind改变this函数的this指向**
+
+
+
 
 
 #### this
@@ -1558,16 +1582,22 @@ btn.onclick = function(){
 
 参照https://segmentfault.com/a/1190000018107875
 
+> 现在的项目都会打包,在打包的时候严格模式会失效,
+>
+> 但是webpack现在打包默认就是严格模式
+
 ```js
 "use strcit";
 //	可以分为全局严格模式和单作用函数严格模式
+//  严格模式不会进行域解析
 ```
 
 
 
 #### 高阶函数
 
-像函数作为参数传入函数,就是作为高阶函数
+> 函数作为参数传入函数,或者函数返回函数,我们就称这个函数为高阶函数
+>
 
 
 
@@ -1578,7 +1608,9 @@ btn.onclick = function(){
 #### 正则表达式RegExp
 
 ```js
-let reg = new RegExp(word, "g");
+let reg = new RegExp(word, "gi");
+// 使用构造函数有一个好处,这个时候第一个参数是可以接受变量的
+// 但是如果直接使用字面量的方式的话,写在字面量中所有的字符串都是匹配规则
 ```
 
 方法
@@ -1593,6 +1625,7 @@ reg.exec();
 **replace方法**
 
 - 形参依次表示全局正则表达式,第一个子表达式,第二个子表达式...
+- 这个叫分组,默认全部匹配分组是放在分组+1上面那个分组上
 
 ```js
 name = "Doe, John";
@@ -1641,6 +1674,8 @@ let arr3 = [...arr1, ...arr2];
 可以用来将类数组转化为真正的数组
 
 同时我们还有一个`Array.from()`实例方法
+
+Array.from可以接受一个最简单的类数组: {length: 10}
 
 ```js
 function test(){
@@ -1736,13 +1771,15 @@ Set.has()	//	判断Set里面有没有放回布尔值
 
 #### 箭头函数
 
-箭头函数的特点之一就是不绑定新的this，所以箭头函数的this是在词法层面就绑定到了外层作用域，他的this只能是来自外层作用域的this，无论你通过什么方式都不能改变，除非你修改了外层作用域的this。
+箭头函数的特点之一就是不绑定新的this，所以箭头函数的this是在词法层面就绑定到了外层作用域，他的this只能是来自外层作用域的this，但是可以通过bind改变this的值
 
 
 
 
 
 #### 错误处理
+
+promise也有finally函数,无论成功和失败都会执行
 
 ```
 try{
@@ -1837,6 +1874,8 @@ throw new TypeError("TypeError变量类型错误");
 
 #### 计算程序的耗时
 
+> Date.now()是h5的新方法
+
 Data.now() 方法，返回表示调用这个方法时的日期和时间的毫秒数。这个方法简化了使用 Data 对象分析代码的工作;
 
 ```
@@ -1874,6 +1913,8 @@ console.log(end-start);
 
 
 #### 推荐的日期格式化方法->toUTCString
+
+格林威治时间和国际协调时间,现在用的都是UTC了
 
 ```
 var testDate1=new  Date("8/13/2016");
@@ -2183,7 +2224,7 @@ background-size:cover;/*窄边触边*/
 
 ​            1200 --> 1170  --> lg 超大屏
 
-​            9929 --> 70  --> md 中屏幕
+​            992 --> 970  --> md 中屏幕
 
 ​            768 --> 750  --> sm  小屏幕
 
@@ -2748,6 +2789,8 @@ form：xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded; 
 
 form表单的action属性是跳转url
 
+vant组件中设置为form组件设置action属性可以在ios中的键盘上展示search键
+
 Method指提交的方式
 
 
@@ -2818,7 +2861,7 @@ import test from "./test.js"
 
 **filter**设置单个元素会有全部过渡模糊化或者模糊度不够的问题,这个时候可以设置多个滤镜元素,实现局部效果
 
-
+尽量不使用filter属性,这个过滤不太好用,会出现过度模糊和模糊度不够
 
 控制台字符串显示为黑色**
 
@@ -2826,9 +2869,11 @@ import test from "./test.js"
 
 **布尔型显示为深蓝色**
 
+字符串显示为灰色
 
 
-#### 数组也可以与空穿进行相加
+
+#### 数组也可以与空串进行相加
 
 ```
 console.log([1,2,3,4]+"");//1,2,3,4
@@ -2836,6 +2881,10 @@ console.log([1,2,3,4]+"");//1,2,3,4
 ```
 
 #### undefined 和 null没有toString方法,使用string()
+
+利用Object.create(null | undefined)
+
+> undefined和null是没有原型的,这个也契合了undefined和null是没有toString方法的
 
 #### 浮点运算存在误差
 
@@ -2872,9 +2921,9 @@ Null是第二个只有一个值的数据类型，这个特殊的值是null，从
 #### 注意parseInt和parseFloat是比较松散的
 
 ```
-  console.log(Number([1,2,3]))
-  console.log(parseInt([3,2,3]))
-  console.log(parseFloat([1,2,3]))
+  console.log(Number([1,2,3])) 
+  console.log(parseInt([1,2,3])) 
+  console.log(parseFloat([1,2,3])) 
 ```
 
 
@@ -2882,6 +2931,10 @@ Null是第二个只有一个值的数据类型，这个特殊的值是null，从
 
 
 encodeURI和ecnodeURIComponent的区别
+
+> encodeURI只会对讲空格编码为20%
+>
+> encodeURIComponent会对url全编码
 
 encodeURI和encodeURIComponent都是对url的编码。
 
@@ -2903,4 +2956,4 @@ $ajax返回的是一个promies
 
 
 
-异步操作 async/await 虽然是同步的写法,但是是异步操作
+异步操作 async/await 虽然是同步的写法,但是是异步操作,其实就是语法糖,同时使得try{} catch {}大放异彩
