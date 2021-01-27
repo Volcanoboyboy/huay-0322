@@ -1,5 +1,43 @@
 # Git
 
+## Git rebase操作步骤
+
+```
+1.rebase之前需要经master分支拉到最新
+
+2.切换分支到需要rebase的分支，这里是dev分支
+
+3.执行git rebase master，有冲突就解决冲突，解决后直接git add . 再git rebase --continue即可
+
+4.切换到master分支，执行git merge dev
+```
+
+
+
+## git如何在不提交本地修改的前提下，拉取远程最新代码
+
+```
+在git bash中，使用如下命令：
+
+git stash list：查看本地的暂存区栈
+
+（1）git stash：暂存本地修改
+
+（2）git pull：拉取最新代码
+
+（3）git stash pop 或者可以使用：git stash apply stash@{0}  :回到拉取之前的本地状态；此时若出现文件冲突，酌情解决即可；至于是git stash apply stash@{0} 还是git stash apply stash@{1} ，可以通过 git stash list 查看去确定。
+
+可选 git stash clear：清空本地暂存栈信息
+```
+
+
+
+## sourceTree
+
+https://www.liaoxuefeng.com/wiki/896043488029600/1317161920364578
+
+
+
 ## 廖雪峰总结
 
 ```bash
