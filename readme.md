@@ -48,6 +48,38 @@
 
 **[🧍‍♂️前端工程化：3-7 版本控制](./betterthannerver/框架进阶/版本控制/README.md)**
 
+**[⛽️Node.js进阶：4-1 Node.js核心api](./betterthannerver/Node.js进阶/Node.js核心api/README.md)**
+
+**[⛽️Node.js进阶：4-2 Node.js 网络通信](./betterthannerver/Node.js进阶/Node.js网络通信/README.md)**
+
+**[⛽️Node.js进阶：4-3 Node.js事件循环与多进程](./betterthannerver/Node.js进阶/Node.js事件循环与多进程/README.md)**
+
+**[⛽️Node.js进阶：4-4 NoSQL数据库](./betterthannerver/Node.js进阶/NoSQL数据库/README.md)**
+
+**[⛽️Node.js进阶：4-5 MySQL数据库](./betterthannerver/Node.js进阶/MySQL数据库/README.md)**
+
+**[⛽️Node.js进阶：4-6 Web应用开发框架](./betterthannerver/Node.js进阶/Web应用开发框架/README.md)**
+
+**[⛽️Node.js进阶：4-7 BaaS 接口标准](./betterthannerver/Node.js进阶/BaaS 接口标准/README.md)**
+
+**[⛽️Node.js进阶：4-8 Node.js通用业务模块](./betterthannerver/Node.js进阶/Node.js通用业务模块/README.md)**
+
+**[⛽️Node.js进阶：4-9 Node.js守护进程](./betterthannerver/Node.js进阶/Node.js守护进程/README.md)**
+
+**[⛽️Node.js进阶：4-10 网络爬虫开发](./betterthannerver/Node.js进阶/网络爬虫开发/README.md)**
+
+**[⛽️Node.js进阶：4-11 Websocket](./betterthannerver/Node.js进阶/Websocket/README.md)**
+
+**[🌍多端应用：5-1和5-2 混合式App开发框架](./betterthannerver/多端应用/混合式App开发框架/README.md)**
+
+**[🌍多端应用：5-3 React Native-猿健康](./betterthannerver/多端应用/React Native-猿健康/README.md)**
+
+**[🌍多端应用：5-4 Flutter-好客租房](./betterthannerver/多端应用/Flutter-好客租房/README.md)**
+
+**[🌍多端应用：5-5 Electron](./betterthannerver/多端应用/Electron/README.md)**
+
+**[🌍多端应用：5-6 渐进式Web应用（PWA）](./betterthannerver/多端应用/渐进式Web应用（PWA）/README.md)**
+
 **[👩‍🏫算法与数据结构：6-1 数据结构--线性数据结构](./betterthannerver/算法与数据结构/数据结构--线性数据结构/README.md)**
 
 **[👩‍🏫算法与数据结构：6-2 数据结构--非线性数据结构](./betterthannerver/算法与数据结构/数据结构--非线性数据结构/README.md)**
