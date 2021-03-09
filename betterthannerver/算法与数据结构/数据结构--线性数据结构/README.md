@@ -62,7 +62,7 @@
 
 可比喻成一个企业的组织结构，组织结构其实就是**部门与部门之间的关系结构**。
 
-![4](/Volumes/Transcend/video/6-01 数据结构--线性数据结构/resource/assets/4.jpg)
+![4](/Volumes/Transcend/video/6-01 数据结构--线性数据结构/assets/4.jpg)
 
 
 
@@ -84,7 +84,7 @@ const arr = ['a', 'b', 'c'];
 
 
 
-![5](/Volumes/Transcend/video/6-01 数据结构--线性数据结构/resource/assets/5.png)
+![5](/Volumes/Transcend/video/6-01 数据结构--线性数据结构/assets/5.png)
 
 
 
@@ -110,7 +110,7 @@ const arr = ['a', 'b', 'c'];
 
 使用场景：方法调用，作用域
 
-![2](/Volumes/Transcend/video/6-01 数据结构--线性数据结构/resource/assets/2.png)
+![2](/Volumes/Transcend/video/6-01 数据结构--线性数据结构/assets/2.png)
 
 ```javascript
 class Stack {
@@ -194,7 +194,7 @@ class Stack {
 
  删除（delete）操作也被称为出队（dequeue)
 
-![3](/Volumes/Transcend/video/6-01 数据结构--线性数据结构/resource/assets/3.png)
+![3](/Volumes/Transcend/video/6-01 数据结构--线性数据结构/assets/3.png)
 
 ```javascript
 class Queue {
@@ -271,7 +271,7 @@ class Queue {
 
 
 
-![1](/Volumes/Transcend/video/6-01 数据结构--线性数据结构/resource/assets/1.jpeg)
+![1](/Volumes/Transcend/video/6-01 数据结构--线性数据结构/assets/1.jpeg)
 
 
 
