@@ -9,7 +9,7 @@
 
 3.执行git rebase master，有冲突就解决冲突，解决后直接git add . 再git rebase --continue即可
 
-4.切换到master分支，执行git merge dev
+4.切换到master分支，执行git merge dev，这里是执行HEAD的fast-forward
 ```
 
 
