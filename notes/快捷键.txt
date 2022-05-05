@@ -1,0 +1,39 @@
+Ctrl + Alt +m 将选中的代码抽取成一个方法
+Ctrl + n 搜索一个类的源代码 Alt + 7 显示这个类的结构大纲或者按Ctrl + F12
+Ctrl + P 提供形参的类型
+Shift + f6 +鼠标光标点到的地方：一键改多个名字
+alt + 7 源码的方法
+右键，快捷键最长的那个：获取全内名的方法。
+
+Ctrl + Alt + t ：try catch
+
+Ctrl + F ：搜索一个类中的方法
+
+Ctrl + R :查找替换
+
+Alt + 鼠标 ：整列编辑
+
+Ctrl + B ：选中一个类跟进
+
+Alt + 7：查看类的结构大纲
+
+Ctrl + Alt  + Shift  + U ：查看一个类的继承体系
+
+
+HTML
+ Ctrl + Shift + / :注释标签
+
+Shift + f6 ：选中可以全改
+
+Ctrl + Shift  + f ：全局搜索
+
+
+用户名：itcast
+
+子网IP：192.168.24.0
+网关IP：192.168.24.2
+
+
+
+Don't forget, a person's greatest emotional need is to feel appreciated.
+莫忘记，人类情感上最大的需要是感恩。
